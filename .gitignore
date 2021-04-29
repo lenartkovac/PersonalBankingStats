@@ -1,5 +1,8 @@
+<<<<<<< HEAD
 # Custom ignores
+.DS_Store
 data/
+__pycache__/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
