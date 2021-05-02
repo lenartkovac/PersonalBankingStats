@@ -1,3 +1,6 @@
+"""
+this file was used to find the encoding format the bank used for their csv files, as the standard utf-8 couldn't decode the data normally.
+"""
 import pkgutil
 import encodings
 import os
