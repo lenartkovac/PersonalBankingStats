@@ -1,5 +1,34 @@
 from DataLoader import DataLoader as dl
 import numpy as np
+import re
+
+
+def categorizeTransfers(monthlyTransfers):
+    categories = {
+        "shopping": "AMAZON|MIMOVRSTE",
+        "groceries": ".*OSTROZNO|HIPERMARKET|INTERSPAR|HOFER",
+        "bills": "TELEKOM|A1",
+        "restaurants": "WOLT|MCDONALDS|.*LIMBO.*",
+        "subscriptions": "NETFLIX|WANIKANI|LASTFM|SPOTIFY|ICLOUD"
+    }
+    categorizedData = {x: [] for x in categories}
+    categorizedData["other"] = []
+
+    for transferTitle, transferValue in monthlyTransfers.items():
+        hasCategory = False
+        for category, regexCheck in categories.items():
+            if re.match(regexCheck, transferTitle):
+                categorizedData[category].append((transferTitle, transferValue))
+                hasCategory = True
+                break
+        if not hasCategory:
+            categorizedData["other"].append((transferTitle, transferValue))
+
+
+    return categorizedData
+
+
+
 
 months = [1, 2, 3, 4]
 
@@ -17,8 +46,4 @@ for monthlyData in transferData:
     bremena.append(monthlyBreme)
 
 
-
-#print(february)
-#print([(x.get("NAMEN"), x.get("BREME")) for x in february if not x.get("BREME") == ''])
-#print([x.get("NAMEN") for x in march if not x.get("BREME") == ''])
-#print([x.get("NAMEN") for x in april if not x.get("BREME") == ''])
+print(categorizeTransfers(bremena[3]))
