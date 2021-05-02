@@ -11,14 +11,15 @@ def all_encodings():
     aliases = set(encodings.aliases.aliases.values())
     return modnames.union(aliases)
 
-text = b'\x8a'
-#text = b'\x8e'
-for enc in all_encodings():
-    try:
-        msg = text.decode(enc)
-    except Exception:
-        continue
-    if msg == 'Š':
-    #if msg == 'Ž':
-        print("decoding {t} with {enc} is {m}".format(t=text, enc=enc, m=msg))
+if __name__ == "__main__":
+    text = b'\x8a'
+    #text = b'\x8e'
+    for enc in all_encodings():
+        try:
+            msg = text.decode(enc)
+        except Exception:
+            continue
+        if msg == 'Š':
+        #if msg == 'Ž':
+            print("decoding {t} with {enc} is {m}".format(t=text, enc=enc, m=msg))
     
