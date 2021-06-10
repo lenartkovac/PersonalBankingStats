@@ -30,7 +30,7 @@ def status_kek():
 #! Transactions API
 #@app.route("/api/v1/transactions/<int:month>")
 TRANSPATH = "/".join([APIPREFIX, TRANSPREFIX])
-@app.route("/".join(TRANSPATH, "<int:month>"))
+@app.route("/".join([TRANSPATH, "<int:month>"]))
 def getTransactions(month):
     if month < 1 or month > 12:
         abort(404, "Month values must be between 1 and 12") 
@@ -114,4 +114,5 @@ def get_category_names():
     return jsonify(status="OK", names=categories)
 
 if __name__ == "__main__":
-    app.run("localhost", 5000)
+    app.run("localhost", 5000
+    )
