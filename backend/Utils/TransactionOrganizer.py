@@ -1,4 +1,4 @@
-from DataLoader import DataLoader
+from .DataLoader import DataLoader
 import numpy as np
 import re
 from pymongo import MongoClient

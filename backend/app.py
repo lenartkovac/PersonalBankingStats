@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, abort, request
-from TransactionOrganizer import Transactions, DBhandler, TransactionManager
+from Utils.TransactionOrganizer import Transactions, DBhandler, TransactionManager
 
 app = Flask(__name__)
 
@@ -28,22 +28,21 @@ def status_kek():
     return f"<p>Hello api {TransactionManager.logRequest()}</p>"
 
 #! Transactions API
-#@app.route("/api/v1/transactions/<int:month>")
-TRANSPATH = "/".join([APIPREFIX, TRANSPREFIX])
-@app.route("/".join([TRANSPATH, "<int:month>"]))
+@app.route("/api/v1/transactions/<int:month>")
 def getTransactions(month):
     if month < 1 or month > 12:
         abort(404, "Month values must be between 1 and 12") 
     try:
         transactions = TransactionManager.getTransactions(month - 1)
-    except Exception:
+    except Exception as e:
+        print(e)
         abort(404)
     if not transactions:
         abort(500) 
     return jsonify(status="OK", incoming=transactions.incoming, outgoing=transactions.outgoing)
 
 #@app.route("/api/v1/transactions/<int:month>/incoming")
-@app.route("/".join([TRANSPATH, "<int:month>", "incoming"]))
+@app.route("/api/v1/transactions/<int:month>/incoming")
 def getIncoming(month):
     if month < 1 or month > 12:
         abort(404, "Month values must be between 1 and 12") 
@@ -52,7 +51,7 @@ def getIncoming(month):
         abort(500) 
     return jsonify(status="OK", outgoing=transactions.incoming)
 
-@app.route("/".join([TRANSPATH, "<int:month>", "outgoing"]))
+@app.route("/api/v1/transactions/<int:month>/outgoing")
 def getOutgoing(month):
     if month < 1 or month > 12:
         abort(404, "Month values must be between 1 and 12") 
@@ -61,7 +60,7 @@ def getOutgoing(month):
         abort(500) 
     return jsonify(status="OK", outgoing=transactions.outgoing)
 
-@app.route("/".join([TRANSPATH, "<int:month>", "outgoing", "categorized"]))
+@app.route("/api/v1/transactions/<int:month>/outgoing/categorized")
 def getCat(month):
     if month < 1 or month > 12:
         abort(404, "Month values must be between 1 and 12") 
@@ -72,7 +71,6 @@ def getCat(month):
 
 
 #! categories API
-CATPATH = "/".join([APIPATH, CATPREFIX])
 
 def DBinteracter(data, operation):
     catNames = DBhandler.getCategoryNames()
@@ -89,30 +87,29 @@ def DBinteracter(data, operation):
             response[key] = "NOK"
     return jsonify(status="OK", res=response)
 
-@app.route(CATPATH, methods=['GET'])
+@app.route("/api/v1/categories", methods=['GET'])
 def get_categories():
     categories = DBhandler.getCategories()
     return jsonify(status="OK", categories=categories)
 
-@app.route(CATPATH, methods=['POST'])
+@app.route("/api/v1/categories", methods=['POST'])
 def add_category_item():
     data = request.json
     if not data:
         abort(404, "No data in request body")
     return DBinteracter(data, DBhandler.addToCategory)
 
-@app.route(CATPATH, methods=['DELETE'])
+@app.route("/api/v1/categories", methods=['DELETE'])
 def remove_category_item():
     data = request.json
     if not data:
         abort(404, "No data in request body")
     return DBinteracter(data, DBhandler.delFromCategory)
 
-@app.route("/".join([CATPATH, "names"]))
+@app.route("/api/v1/categories/names")
 def get_category_names():
     categories = DBhandler.getCategoryNames()
     return jsonify(status="OK", names=categories)
 
 if __name__ == "__main__":
-    app.run("localhost", 5000
-    )
+    app.run("localhost", 5000)
