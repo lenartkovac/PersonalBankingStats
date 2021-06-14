@@ -20,18 +20,23 @@ class DBhandler:
     It handles the CRUD operations over the categories.
     """
     _db = MongoClient(DATABASE_URL, DATABASE_PORT).BankDetails
-    _categories = ["shopping", "groceries", "bills", "restaurants", "subscriptions"]
+    #_categories = ["shopping", "groceries", "bills", "restaurants", "subscriptions"]
+    _categories = _db.list_collection_names()
 
     @classmethod
     def getCategoryNames(cls):
-        return cls._categories
+        return cls._db.list_collection_names()
 
     @classmethod
     def getCategories(cls):
         categories = {}
-        for category in cls._categories:
+        for category in cls.getCategoryNames():
             categories[category] = "|".join([x.get("name")for x in cls._db[category].find()])
         return categories
+       
+    @classmethod
+    def dropCategory(cls, category):
+        return cls._db[category].drop()
 
     @classmethod
     def addToCategory(cls, category: str, newTerm: str):
@@ -68,8 +73,8 @@ class Transactions:
     """
     #! Static database client
 
-    def __init__(self, year, month):
-        self.transactions = DataLoader.monthlyData(year, month)
+    def __init__(self, year, month, datadir="data"):
+        self.transactions = DataLoader.monthlyData(year, month, datadir)
         self._categories = DBhandler.getCategories()
         self._categorizeOut()
 
@@ -83,7 +88,7 @@ class Transactions:
         for transTitle, transValue in self.outgoing.items():
             hasCategory = False
             for category, regex in self._categories.items():
-                if re.match(regex, transTitle):
+                if re.match(regex, transTitle) and not regex == '':
                     self._categorizedOut[category][transTitle] = transValue
                     hasCategory = True
                     break
@@ -120,15 +125,17 @@ class Transactions:
 
 #! Testing
 if __name__ == "__main__":
-    #! Transactions
-    january = Transactions(2021, 1)
-    january._loadCategories()
-    print(january.outgoing_cat)
-    print('-' * 50)
-    pprint(january.outgoing_cat)
+    #! DBhandler 
+    #print(DBhandler._categories)
 
-    #! TransactionManager
-    TransactionManager.printTransactions()
-    print(TransactionManager.getTransactions(0))
-    print(TransactionManager.getTransactions(3))
-    TransactionManager.printTransactions()
+    ##! Transactions
+    monthTest = Transactions(2021, 1, datadir="/Users/lenartkovac/Projects/PersonalBankingStats/data")
+    #january._loadCategories()
+    pprint(monthTest.outgoing_cat)
+    #pprint(january.outgoing_cat)
+
+    ##! TransactionManager
+    #TransactionManager.printTransactions()
+    #print(TransactionManager.getTransactions(0))
+    #print(TransactionManager.getTransactions(3))
+    #TransactionManager.printTransactions()

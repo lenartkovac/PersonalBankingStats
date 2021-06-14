@@ -71,19 +71,18 @@ def getCat(month):
 
 
 #! categories API
-
 def DBinteracter(data, operation):
     catNames = DBhandler.getCategoryNames()
     response = {}
     for key, val in data.items():
-        if key in catNames:
+        try:
             if type(val) == list:
                 for item in val:
                     operation(key, item)
             else:
                     operation(key, val)
             response[key] = "OK"
-        else:
+        except Exception:
             response[key] = "NOK"
     return jsonify(status="OK", res=response)
 
@@ -105,6 +104,13 @@ def remove_category_item():
     if not data:
         abort(404, "No data in request body")
     return DBinteracter(data, DBhandler.delFromCategory)
+
+@app.route("/api/v1/categories/<catName>/delete", methods=['DELETE'])
+def remove_category(catName):
+    result = DBhandler.dropCategory(catName)
+    #FIXME: DBhandler.dropCategory() always returns None regardless of whether or not the collection was deleted.
+    return jsonify(status="OK")
+
 
 @app.route("/api/v1/categories/names")
 def get_category_names():
