@@ -1,7 +1,9 @@
 from flask import Flask, jsonify, abort, request
 from Utils.TransactionOrganizer import Transactions, DBhandler, TransactionManager
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 APIPREFIX = "/api"
 VERSION = "v1"
