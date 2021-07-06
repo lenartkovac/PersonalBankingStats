@@ -51,7 +51,7 @@ def getIncoming(month):
     transactions = TransactionManager.getTransactions(month - 1)
     if not transactions:
         abort(500) 
-    return jsonify(status="OK", outgoing=transactions.incoming)
+    return jsonify(status="OK", data=transactions.incoming)
 
 @app.route("/api/v1/transactions/<int:month>/outgoing")
 def getOutgoing(month):
@@ -60,7 +60,7 @@ def getOutgoing(month):
     transactions = TransactionManager.getTransactions(month - 1)
     if not transactions:
         abort(500) 
-    return jsonify(status="OK", outgoing=transactions.outgoing)
+    return jsonify(status="OK", data=transactions.outgoing)
 
 @app.route("/api/v1/transactions/<int:month>/outgoing/categorized")
 def getCat(month):
