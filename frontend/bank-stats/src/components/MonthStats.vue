@@ -2,13 +2,13 @@
 	<div>
 		<Tabs>
 			<Tab title="Incoming">
-				<Incoming/>
+				<Incoming v-bind:month="month" />
 			</Tab>
 			<Tab title="Outgoing">
-				<Outgoing/>
+				<Outgoing v-bind:month="month" />
 			</Tab>
 			<Tab title="Categorized">
-				<Categorized/>
+				<Categorized v-bind:month="month" />
 			</Tab>
 		</Tabs>
 	</div>
@@ -28,6 +28,11 @@ export default {
 		Incoming,
 		Outgoing,
 		Categorized
+	},
+	data() {
+		return {
+			month: 2
+		}
 	}
 }
 </script>

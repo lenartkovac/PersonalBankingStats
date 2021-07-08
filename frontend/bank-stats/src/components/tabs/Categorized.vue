@@ -1,9 +1,15 @@
 <template>
-	<h5>hello from {{title}}</h5>
+	<h5>{{title}} for month {{month}}</h5>
 </template>
 
 <script>
 export default {
+	props: {
+		month: {
+			type: Number,
+			default: 0
+		}
+	},
 	data () {
 		return {
 			title: "Categorized"
