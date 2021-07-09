@@ -31,7 +31,7 @@ export default {
 	},
 	data() {
 		return {
-			month: 2
+			month: 3
 		}
 	}
 }

@@ -1,23 +1,54 @@
 <template>
-	<h5>{{title}} for month {{month}}</h5>
+	<div v-for="category in Object.keys(data)" :key="category">
+		<h3>{{capitalize(category)}}</h3>
+		<TransactionTable v-bind:data="data[category]" v-bind:title="category"/>
+	</div>
 </template>
 
 <script>
+import TransactionTable from '../TransactionTable.vue'
 export default {
+	name: "Incoming",
+	components: {
+		TransactionTable
+	},
 	props: {
 		month: {
 			type: Number,
 			default: 0
 		}
 	},
-	data () {
+	data() {
 		return {
-			title: "Categorized"
+			title: "Categorized",
+			data: {},
+			error: null
 		}
+	},
+	methods: {
+		capitalize(title) {
+			return title.charAt(0).toUpperCase() + title.slice(1);
+		}
+	},
+	mounted() {
+		this.axios.get(`http://localhost:5000/api/v1/transactions/${this.month}/outgoing/categorized`)
+			.then((response) => {
+				if (!response 
+				|| !response.data 
+				|| response.data.status !== "OK" 
+				|| !response.data.data) {
+					this.error = "Error retrieving data"
+				}
+				this.data = response.data.data
+			})
 	}
 }
 </script>
 
 <style scoped>
+
+h3 {
+	text-align: center;
+}
 
 </style>

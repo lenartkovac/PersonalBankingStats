@@ -3,7 +3,7 @@
 		{{error}}
 	</div>
 	<div v-else>
-		<TransactionTable v-bind:data="data"/>
+		<TransactionTable v-bind:data="data" title="incoming"/>
 	</div>
 </template>
 
