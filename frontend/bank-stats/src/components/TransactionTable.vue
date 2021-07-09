@@ -28,8 +28,8 @@
 		</tbody>
 		<tfoot>
 			<tr>
-				<td>x</td>
-				<td>total outgoing</td>
+				<!--<td>x</td>-->
+				<td colspan="2">total {{title}}</td>
 				<td>{{round(total)}}€</td>
 			</tr>
 		</tfoot>
@@ -41,7 +41,14 @@
 export default {
 	name: "TransactionTable",
 	props: {
-		data: {},
+		data: {
+			type: Object,
+			default: null
+		},
+		title: {
+			type: String,
+			default: ''
+		}
 	},
 	data() {
 		return {
@@ -60,6 +67,9 @@ export default {
 		},
 		getKeys() {
 			//let array = []
+			if (this.data == null) {
+				return []
+			}
 			const sortFunction = this.sorting === "name" ? undefined : (a, b) => {
 				if (this.data[a] < this.data[b]) 
 					return -1;
