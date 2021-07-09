@@ -29,9 +29,10 @@ export default {
 		Outgoing,
 		Categorized
 	},
-	data() {
-		return {
-			month: 3
+	props: {
+		month: {
+			type: Number,
+			default: 1
 		}
 	}
 }

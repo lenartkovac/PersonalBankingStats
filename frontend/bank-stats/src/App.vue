@@ -1,17 +1,17 @@
 <template>
   <Heading/>
-  <MonthStats/>
+  <Controller/>
 </template>
 
 <script>
 import Heading from './components/Heading.vue'
-import MonthStats from './components/MonthStats.vue'
+import Controller from './components/Controller.vue'
 
 export default {
   name: 'App',
   components: {
     Heading,
-    MonthStats
+    Controller
   }
 }
 </script>

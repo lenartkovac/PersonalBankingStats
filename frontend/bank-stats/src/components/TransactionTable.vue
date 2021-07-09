@@ -6,15 +6,13 @@
 				<th @click="switchSort('name')">
 					<span>title</span>
 					<span v-if="sorting === 'name'">
-						<span v-if="reversed"><i class="fas fa-sort-up"/></span>️
-						<span v-if="!reversed"><i class="fas fa-sort-down"/></span>️
+						<span :key="reversed"><i :class="reversed ? 'fas fa-sort-up' : 'fas fa-sort-down'"/></span>️
 					</span>
 				</th>
 				<th @click="switchSort('value')">
 					<span>value</span>	
 					<span v-if="sorting === 'value'">
-						<span v-if="reversed"><i class="fas fa-sort-up"/></span>️
-						<span v-if="!reversed"><i class="fas fa-sort-down"/></span>️
+						<span :key="reversed"><i :class="reversed ? 'fas fa-sort-up' : 'fas fa-sort-down'"/></span>️
 					</span>
 				</th>
 			</tr>
