@@ -24,6 +24,8 @@ import {
   toRefs
 } from "vue"
 
+import { useStore } from 'vuex'
+
 export default {
 	setup(_, {slots}) {
     const state = reactive ({
@@ -35,9 +37,15 @@ export default {
 
     const selectTab = (i) => {
       state.selectedTab = i;
+      store.commit('changeTab', i)
     }
 
-    onMounted(() => selectTab("Incoming"))
+    const store = useStore()
+    //console.log(store.state.currTab)
+
+    //onMounted(() => selectTab("Incoming"))
+    onMounted(() => state.selectedTab = store.state.currTab)
+
     return { ...toRefs(state), selectTab}
   },
   data() {
