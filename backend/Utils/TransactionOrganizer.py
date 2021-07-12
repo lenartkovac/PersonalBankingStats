@@ -120,9 +120,6 @@ class Transactions:
                 result[transaction.get("NAMEN")] = transaction.get("DOBRO")
         return result 
 
-
-
-
 #! Testing
 if __name__ == "__main__":
     #! DBhandler 
