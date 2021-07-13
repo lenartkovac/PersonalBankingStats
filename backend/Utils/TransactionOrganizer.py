@@ -6,6 +6,7 @@ from pprint import pprint
 import os
 from os.path import dirname
 from dotenv import load_dotenv
+from pytictoc import TicToc
 
 
 dotenv_path = os.path.join(dirname(__file__), '.env')
@@ -65,6 +66,7 @@ class TransactionManager:
         if not cls.transactions[index]:
             cls.transactions[index] = Transactions(2021, index + 1)
         return cls.transactions[index]
+        #return Transactions(2021, index + 1)
 
 
 class Transactions:
@@ -75,30 +77,30 @@ class Transactions:
 
     def __init__(self, year, month, datadir="data"):
         self.transactions = DataLoader.monthlyData(year, month, datadir)
-        self._categories = DBhandler.getCategories()
-        self._categorizeOut()
 
     def _loadCategories(self):
-        self._categories = DBhandler.getCategories()
-
-    def _categorizeOut(self) -> dict:
-        self._categorizedOut = {x: {} for x in self._categories}
-        self._categorizedOut["other"] = {}
-
-        for transTitle, transValue in self.outgoing.items():
-            hasCategory = False
-            for category, regex in self._categories.items():
-                if re.match(regex, transTitle) and not regex == '':
-                    self._categorizedOut[category][transTitle] = transValue
-                    hasCategory = True
-                    break
-            if not hasCategory:
-                self._categorizedOut["other"][transTitle] = transValue
-
+        print("LOADING CATEGORIES")
+        return DBhandler.getCategories()
 
     @property
     def outgoing_cat(self) -> dict:
-        return self._categorizedOut
+        t = TicToc()
+        t.tic()
+        categories = self._loadCategories()
+        categorizedOut = {x: {} for x in categories}
+        categorizedOut["other"] = {}
+
+        for transTitle, transValue in self.outgoing.items():
+            hasCategory = False
+            for category, regex in categories.items():
+                if re.fullmatch(regex, transTitle) and not regex == '':
+                    categorizedOut[category][transTitle] = transValue
+                    hasCategory = True
+                    break
+            if not hasCategory:
+                categorizedOut["other"][transTitle] = transValue
+        print(t.toc("Categorization operation took: "))
+        return categorizedOut
 
     @property
     def outgoing(self) -> dict:
