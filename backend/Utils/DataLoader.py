@@ -16,7 +16,6 @@ class DataLoader:
 
                 #? change money values to use period instead of the comma as the decimal separator,
                 #? as well as parse them from string to float types, as these values will be used for numerical purposes
-
                 row["BREME"] = float(row.get("BREME").replace(",", ".")) if not row.get("BREME") == '' else 0.0
                 row["DOBRO"] = float(row.get("DOBRO").replace(",", ".")) if not row.get("DOBRO") == '' else 0.0
 
@@ -25,6 +24,10 @@ class DataLoader:
                 row["NAMEN"] = row.get("NAMEN").upper()
 
                 #? process some commonly appearing data to limit it to only useful information
+                row["NAMEN"] = re.sub("\*", "", row["NAMEN"])
+                row["NAMEN"] = re.sub("D.O.O.", "", row["NAMEN"])
+                row["NAMEN"] = " ".join([x for x in re.split(" ", row["NAMEN"]) if not re.fullmatch("\d+", x)])
+
                 if re.match("AMZN|AMAZON", row["NAMEN"]):
                     row["NAMEN"] = "AMAZON"
                 if re.match(".*LENKO.JAPAN", row["NAMEN"]):
@@ -47,6 +50,10 @@ class DataLoader:
                     row["NAMEN"] = "MCDONALDS"
                 if re.match("POLOG GOTOVINE", row["NAMEN"]):
                     row["NAMEN"] = "POLOG GOTOVINE"
+
+                #? Strip again for cleanup
+                row["NAMEN"] = row["NAMEN"].strip()
+
 
                 dicts.append(row)
         return dicts
