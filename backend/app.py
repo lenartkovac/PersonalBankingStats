@@ -80,7 +80,7 @@ def transactions_outgoing_categorized(month):
 
 #! categories API
 #* Helper functions
-def BDhandler(data, operation):
+def handleDBreq(data, operation):
     catNames = DBhandler.getCategoryNames()
     response = {}
     for key, val in data.items():
@@ -106,14 +106,14 @@ def add_category_item():
     data = request.json
     if not data:
         abort(404, "No data in request body")
-    return DBhandler(data, DBhandler.addToCategory)
+    return handleDBreq(data, DBhandler.addToCategory)
 
 @app.route("/api/v1/categories", methods=['DELETE'])
 def remove_category_item():
     data = request.json
     if not data:
         abort(404, "No data in request body")
-    return DBhandler(data, DBhandler.delFromCategory)
+    return handleDBreq(data, DBhandler.delFromCategory)
 
 @app.route("/api/v1/categories/<catName>/delete", methods=['DELETE'])
 def remove_category(catName):
