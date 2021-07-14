@@ -1,8 +1,15 @@
 <template>
-	<div v-for="category in Object.keys(data)" :key="category">
-		<h3>{{capitalize(category)}}</h3>
-		<TransactionTable v-bind:data="data[category]" v-bind:title="category"/>
+<div>
+	<div v-if="!error">
+		<div v-for="category in Object.keys(data)" :key="category">
+			<h3>{{capitalize(category)}}</h3>
+			<TransactionTable v-bind:data="data[category]" v-bind:title="category"/>
+		</div>
 	</div>
+	<div v-if="error">
+		<h3> {{error}}</h3>
+	</div>
+</div>
 </template>
 
 <script>
@@ -31,6 +38,7 @@ export default {
 		}
 	},
 	mounted() {
+		console.log("CATEGORIZED CREATED")
 		this.axios.get(`http://localhost:5000/api/v1/transactions/${this.month}/outgoing/categorized`)
 			.then((response) => {
 				if (!response 

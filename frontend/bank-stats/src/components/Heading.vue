@@ -6,6 +6,10 @@
 		<div>
 			<span class="title">Bank meme</span>
 		</div>
+		<span class="router">
+			<router-link to="/">Home</router-link>
+			<router-link to="/settings">Settings</router-link>
+		</span>
 	</div>
 </template>
 
@@ -35,6 +39,10 @@ img {
 .title {
 	margin: 0.5em 0 1em 1em;
 	font-size: 1.5em;
+}
+
+.router {
+	float: right;
 }
 
 </style>

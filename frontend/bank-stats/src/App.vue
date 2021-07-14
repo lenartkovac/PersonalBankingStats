@@ -1,17 +1,17 @@
 <template>
-  <Heading/>
-  <Controller/>
+  <div>
+    <Heading/>
+    <router-view/>
+  </div>
 </template>
 
 <script>
 import Heading from './components/Heading.vue'
-import Controller from './components/Controller.vue'
 
 export default {
   name: 'App',
   components: {
-    Heading,
-    Controller
+    Heading
   }
 }
 </script>

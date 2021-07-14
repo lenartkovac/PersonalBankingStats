@@ -1,6 +1,5 @@
 import { createStore } from 'vuex'
 
-
 const state = {
 	currTab: 'Incoming'
 }
@@ -15,9 +14,10 @@ const getters = {
 	getCurrTab: state => state.currTab
 }
 
-
-export const store = createStore({
+const store = createStore({
 	state,
 	mutations,
 	getters
 })
+
+export default store
