@@ -93,13 +93,13 @@ def handleDBreq(data, operation):
             response[key] = "OK"
         except Exception:
             response[key] = "NOK"
-    return jsonify(status="OK", res=response)
+    return jsonify(status="OK", data=response)
 
 #* Routes
 @app.route("/api/v1/categories", methods=['GET'])
 def get_categories():
     categories = DBhandler.getCategories()
-    return jsonify(status="OK", categories=categories)
+    return jsonify(status="OK", data=categories)
 
 @app.route("/api/v1/categories", methods=['POST'])
 def add_category_item():
@@ -118,14 +118,19 @@ def remove_category_item():
 @app.route("/api/v1/categories/<catName>/delete", methods=['DELETE'])
 def remove_category(catName):
     result = DBhandler.dropCategory(catName)
-    #FIXME: DBhandler.dropCategory() always returns None regardless of whether or not the collection was deleted.
-    return jsonify(status="OK")
+    print(result)
+    if not result.get("ok"):
+        if result.get("errmsg") == 'ns not found':
+            abort(404, "Category does not exist")
+        else:
+            abort(500)
+    return '', 204
 
 
 @app.route("/api/v1/categories/names")
 def get_category_names():
     categories = DBhandler.getCategoryNames()
-    return jsonify(status="OK", names=categories)
+    return jsonify(status="OK", data=categories)
 
 if __name__ == "__main__":
     app.run("localhost", 5000)
