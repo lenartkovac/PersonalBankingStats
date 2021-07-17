@@ -37,7 +37,7 @@ class DBhandler:
        
     @classmethod
     def dropCategory(cls, category):
-        return cls._db[category].drop()
+        return cls._db.drop_collection(category)
 
     @classmethod
     def addToCategory(cls, category: str, newTerm: str):
