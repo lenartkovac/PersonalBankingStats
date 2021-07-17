@@ -1,8 +1,11 @@
 from flask import Flask, jsonify, abort, request
 from Utils.TransactionOrganizer import Transactions, DBhandler, TransactionManager
 from flask_cors import CORS
+from flasgger import Swagger 
 
 app = Flask(__name__)
+#TODO: Add object schemas to documentation!!!!
+Swagger(app)
 CORS(app)
 
 APIPREFIX = "/api"
@@ -23,11 +26,17 @@ def internal_server_error(e="Internal server error"):
 
 @app.route("/")
 def hello_world():
-    return f"<p>Hello world {TransactionManager.logRequest()}</p>"
+    """
+    Base path to check if server is online
+    ---
+    tags:
+        - base
+    responses:
+        200:
+            description: server is online
+    """
+    return jsonify(status="online"), 200
 
-@app.route("/api/v1")
-def status_kek():
-    return f"<p>Hello api {TransactionManager.logRequest()}</p>"
 
 #! Transactions API
 #* Helper functions
@@ -63,19 +72,97 @@ def handleRequest(month: int, dataType: str):
 #* Routes
 @app.route("/api/v1/transactions/<int:month>")
 def transactions(month):
+    """
+    Get incoming and outgoing transactios for selected month
+    ---
+    tags:
+        - transactions
+        - incoming
+        - outgoing
+    parameters:
+        - name: month
+          in: path
+          required: true
+          type: integer 
+    responses:
+        200:
+            description: transactions for selected month have been returned successfully
+        404:
+            description: A wrong month has been selected (month values must be between 1 and 12) or data for this month does not exist
+        500:
+            description: Internal sevver error retreiving transactions
+    """
     return handleRequest(month, "ALL")
 
 #@app.route("/api/v1/transactions/<int:month>/incoming")
 @app.route("/api/v1/transactions/<int:month>/incoming")
 def transactions_incoming(month):
+    """
+    Get incoming transactions
+    ---
+    tags:
+        - transactions
+        - incoming
+    parameters:
+        - name: month
+          in: path
+          required: true
+          type: integer 
+    responses:
+        200:
+            description: incoming transactions for selected month have been returned successfully
+        404:
+            description: A wrong month has been selected (month values must be between 1 and 12) or data for this month does not exist
+        500:
+            description: Internal sevver error retreiving transactions
+    """
     return handleRequest(month, "incoming")
 
 @app.route("/api/v1/transactions/<int:month>/outgoing")
 def transactions_outgoing(month):
+    """
+    Get outgoing transactions
+    ---
+    tags:
+        - transactions
+        - outgoing
+    parameters:
+        - name: month
+          in: path
+          required: true
+          type: integer 
+    responses:
+        200:
+            description: outgoing transactions for selected month have been returned successfully
+        404:
+            description: A wrong month has been selected (month values must be between 1 and 12) or data for this month does not exist
+        500:
+            description: Internal sevver error retreiving transactions
+    """
     return handleRequest(month, "outgoing")
 
 @app.route("/api/v1/transactions/<int:month>/outgoing/categorized")
 def transactions_outgoing_categorized(month):
+    """
+    Get categorized outgoing transactions
+    ---
+    tags:
+        - transactions
+        - incoming
+        - categorized
+    parameters:
+        - name: month
+          in: path
+          required: true
+          type: integer 
+    responses:
+        200:
+            description: outgoing transactions grouped together by categories
+        404:
+            description: A wrong month has been selected (month values must be between 1 and 12) or data for this month does not exist
+        500:
+            description: Internal sevver error retreiving transactions
+    """
     return handleRequest(month, "outgoing_cat")
 
 #! categories API
@@ -98,11 +185,35 @@ def handleDBreq(data, operation):
 #* Routes
 @app.route("/api/v1/categories", methods=['GET'])
 def get_categories():
+    """
+    get category names along with their regex values
+    ---
+    tags:
+        - categories
+    responses:
+        200:
+            description: json body of categories
+        500:
+            description: Internal sevver error retreiving transactions
+    """
     categories = DBhandler.getCategories()
     return jsonify(status="OK", data=categories)
 
 @app.route("/api/v1/categories", methods=['POST'])
 def add_category_item():
+    """
+    add a new item to a category
+    ---
+    tags:
+        - categories
+    responses:
+        200:
+            description: item aded successfully
+        404:
+            description: no data in body request
+        500:
+            description: Internal sevver error retreiving transactions
+    """
     data = request.json
     if not data:
         abort(404, "No data in request body")
@@ -110,6 +221,19 @@ def add_category_item():
 
 @app.route("/api/v1/categories", methods=['DELETE'])
 def remove_category_item():
+    """
+    remove item from category
+    ---
+    tags:
+        - categories
+    responses:
+        200:
+            description: item successfully deleted from category
+        404:
+            description: no data in body request
+        500:
+            description: Internal sevver error retreiving transactions
+    """
     data = request.json
     if not data:
         abort(404, "No data in request body")
@@ -117,6 +241,24 @@ def remove_category_item():
 
 @app.route("/api/v1/categories/<catName>/delete", methods=['DELETE'])
 def remove_category(catName):
+    """
+    remove category
+    ---
+    tags:
+        - categories
+    parameters:
+        - name: category
+          in: path
+          required: true
+          type: string
+    responses:
+        204:
+            descrption: category successfully deleted
+        404:
+            description: category does not exist
+        500:
+            description: Internal sevver error retreiving transactions
+    """
     result = DBhandler.dropCategory(catName)
     print(result)
     if not result.get("ok"):
@@ -129,6 +271,19 @@ def remove_category(catName):
 
 @app.route("/api/v1/categories/names")
 def get_category_names():
+    """
+    retreive category names, without items
+    ---
+    tags:
+        - categories
+    responses:
+        200:
+            description: get category names
+        404:
+            description: category does not exist
+        500:
+            description: Internal sevver error retreiving transactions
+    """
     categories = DBhandler.getCategoryNames()
     return jsonify(status="OK", data=categories)
 
