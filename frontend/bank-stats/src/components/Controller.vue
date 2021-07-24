@@ -1,11 +1,13 @@
 <template>
-	<div class="controller">
-		<span @click="decMonth"><i class="fas fa-chevron-left"/></span>
-		<span>{{currentMonth}}</span>
-		<span @click="incMonth"><i class="fas fa-chevron-right"/></span>
-	</div>
-	<div class="container">
-		<MonthStats v-bind:month="currentMonth" :key="currentMonth"/>
+	<div>
+		<div class="controller">
+			<span class="prev" @click="decMonth"><i class="fas fa-chevron-left"/></span>
+			<span>{{currentMonth}}</span>
+			<span class="next" @click="incMonth"><i class="fas fa-chevron-right"/></span>
+		</div>
+		<div class="container">
+			<MonthStats v-bind:month="currentMonth" :key="currentMonth"/>
+		</div>
 	</div>
 </template>
 
@@ -41,13 +43,17 @@ export default {
 	font-size: 3em;
 }
 
+.prev {
+	margin-right: 0.5em
+}
+
+.next {
+	margin-left: 0.5em
+}
+
 .container {
 	width: 75%;
 	margin-left: 10%;
-}
-
-.controller span {
-	margin-right: 2em
 }
 
 </style>

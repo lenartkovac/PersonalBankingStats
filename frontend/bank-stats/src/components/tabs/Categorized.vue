@@ -38,7 +38,6 @@ export default {
 		}
 	},
 	mounted() {
-		console.log("CATEGORIZED CREATED")
 		this.axios.get(`http://localhost:5000/api/v1/transactions/${this.month}/outgoing/categorized`)
 			.then((response) => {
 				if (!response 
