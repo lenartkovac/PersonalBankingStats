@@ -3,25 +3,39 @@
 			<span class="logo">
 				<img src="../assets/logo.png"/>
 			</span>
-		<div>
-			<span class="title">Bank meme</span>
+		<div class="title">
+			<span >Bank meme</span>
+			<span class="router">
+				<span v-if="path === '/settings'">
+					<router-link to="/"><i class="fas fa-home"/></router-link>
+				</span>
+				<span v-else>
+					<router-link to="/settings"><i class="fas fa-cog"/></router-link>
+				</span>
+			</span>
 		</div>
-		<span class="router">
-			<router-link to="/">Home</router-link>
-			<router-link to="/settings">Settings</router-link>
-		</span>
 	</div>
 </template>
 
 <script>
-export default {
+import { useRoute } from 'vue-router'
+import { computed } from 'vue'
 
+export default {
+	name: "Heading",
+	setup() {
+		const route = useRoute()
+		console.log(route)
+		
+		const path = computed(() => route.path)
+		return {path}
+	}
 }
 </script>
 
 <style scoped>
 .heading {
-	padding: 1em 0 1em 1em;
+	padding: 1em;
 	background: red;
 	/*
 	box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
@@ -37,12 +51,18 @@ img {
 }
 
 .title {
+	/*
 	margin: 0.5em 0 1em 1em;
+	*/
 	font-size: 1.5em;
 }
 
 .router {
 	float: right;
+}
+
+.router:link {
+	color: black;
 }
 
 </style>
