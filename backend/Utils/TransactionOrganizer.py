@@ -26,12 +26,16 @@ class DBhandler:
 
     @classmethod
     def getCategoryNames(cls):
-        return cls._db.list_collection_names()
+        #return cls._db.list_collection_names()
+        categoryNames = cls._db.list_collection_names()
+        categoryNames.append("other")
+        return categoryNames
+        #return cls._db.list_collection_names().append("other")
 
     @classmethod
     def getCategories(cls):
         categories = {}
-        for category in cls.getCategoryNames():
+        for category in cls._db.list_collection_names():
             categories[category] = "|".join([x.get("name")for x in cls._db[category].find()])
         return categories
        
@@ -40,12 +44,12 @@ class DBhandler:
         return cls._db.drop_collection(category)
 
     @classmethod
-    def addToCategory(cls, category: str, newTerm: str):
-            cls._db[category].insert_one({"name": newTerm})
+    def addToCategory(cls, category: str, newTerm: str, session=None):
+            cls._db[category].insert_one({"name": newTerm}, session=session)
 
     @classmethod
-    def delFromCategory(cls, category, term):
-        cls._db[category].delete_one({"name": term})
+    def delFromCategory(cls, category, term, session=None):
+        cls._db[category].delete_one({"name": term}, session=session)
 
 
 class TransactionManager:

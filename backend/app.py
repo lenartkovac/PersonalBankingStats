@@ -8,12 +8,12 @@ app = Flask(__name__)
 Swagger(app)
 CORS(app)
 
-APIPREFIX = "/api"
-VERSION = "v1"
-TRANSPREFIX = "transactions"
-CATPREFIX = "categories"
-
-APIPATH = "/".join([APIPREFIX, VERSION])
+#APIPREFIX = "/api"
+#VERSION = "v1"
+#TRANSPREFIX = "transactions"
+#CATPREFIX = "categories"
+#
+#APIPATH = "/".join([APIPREFIX, VERSION])
 
 #! API
 @app.errorhandler(404)
@@ -167,16 +167,19 @@ def transactions_outgoing_categorized(month):
 
 #! categories API
 #* Helper functions
-def handleDBreq(data, operation):
+def handleDBreq(data, operation, session=None):
     catNames = DBhandler.getCategoryNames()
     response = {}
     for key, val in data.items():
         try:
             if type(val) == list:
                 for item in val:
-                    operation(key, item)
+                    if item == "other":
+                        continue
+                    operation(key, item, session)
             else:
-                    operation(key, val)
+                if not val == "other":
+                    operation(key, val, session)
             response[key] = "OK"
         except Exception:
             response[key] = "NOK"
@@ -194,7 +197,7 @@ def get_categories():
         200:
             description: json body of categories
         500:
-            description: Internal sevver error retreiving transactions
+            description: Internal sevver error
     """
     categories = DBhandler.getCategories()
     return jsonify(status="OK", data=categories)
@@ -212,12 +215,65 @@ def add_category_item():
         404:
             description: no data in body request
         500:
-            description: Internal sevver error retreiving transactions
+            description: Internal sevver error
     """
     data = request.json
     if not data:
         abort(404, "No data in request body")
     return handleDBreq(data, DBhandler.addToCategory)
+
+@app.route("/api/v1/categories", methods=['PUT'])
+def change_item_category():
+    """
+    move item from one category to another
+    ---
+    tags:
+        - categories
+    responses:
+        200:
+            description: item moved to a different category successfully
+        404:
+            description: no data in body request
+        500:
+            description: Interval server error 
+    """
+    data = request.json
+    #FIXME: these should not be 404!
+    if not data:
+        abort(404, "No data in request body")
+    #return handleDBreq(data, DBhandler.addToCategory)
+    if not data.get("currentCategory"):
+        abort(404, "currentCategory field not in data")
+
+    if not data.get("newCategory"):
+        abort(404, "newCategory field not in data")
+
+    if not data.get("name"):
+        abort(404, "name field not in data")
+
+    delPayload = {
+        data.get("currentCategory"): data.get("name")
+    }
+
+    addPayload = {
+        data.get("newCategory"): data.get("name")
+    }
+
+    with DBhandler._db.client.start_session() as session:
+        session.start_transaction()
+
+        try:
+            removal = handleDBreq(delPayload, DBhandler.delFromCategory, session)
+            #print(removal.json)
+            addition = handleDBreq(addPayload, DBhandler.addToCategory, session)
+            #print(addition.json)
+            session.commit_transaction()
+            #print("transaction commited")
+        except:
+            session.abort_transaction()
+            #print("transaction aborted")
+
+    return jsonify(status="ok", data=data)
 
 @app.route("/api/v1/categories", methods=['DELETE'])
 def remove_category_item():
@@ -232,7 +288,7 @@ def remove_category_item():
         404:
             description: no data in body request
         500:
-            description: Internal sevver error retreiving transactions
+            description: Internal sevver error
     """
     data = request.json
     if not data:
@@ -257,7 +313,7 @@ def remove_category(catName):
         404:
             description: category does not exist
         500:
-            description: Internal sevver error retreiving transactions
+            description: Internal sevver error
     """
     result = DBhandler.dropCategory(catName)
     print(result)
@@ -282,7 +338,7 @@ def get_category_names():
         404:
             description: category does not exist
         500:
-            description: Internal sevver error retreiving transactions
+            description: Internal sevver error
     """
     categories = DBhandler.getCategoryNames()
     return jsonify(status="OK", data=categories)
