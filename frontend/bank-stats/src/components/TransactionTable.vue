@@ -1,29 +1,46 @@
 <template lang="html">
 	<table class="fl-table">
+		<!-- Table head -->
 		<thead>
 			<tr>
 				<th>index</th>
 				<th @click="switchSort('name')">
 					<span>title</span>
 					<span v-if="sorting === 'name'">
-						<span :key="reversed"><i :class="reversed ? 'fas fa-sort-up' : 'fas fa-sort-down'"/></span>️
+						<span :key="reversed"><i :class="reversed ? 'fas fa-sort-up' : 'fas fa-sort-down'"/></span>
 					</span>
 				</th>
 				<th @click="switchSort('value')">
 					<span>value</span>	
 					<span v-if="sorting === 'value'">
-						<span :key="reversed"><i :class="reversed ? 'fas fa-sort-up' : 'fas fa-sort-down'"/></span>️
+						<span :key="reversed"><i :class="reversed ? 'fas fa-sort-up' : 'fas fa-sort-down'"/></span>
 					</span>
+				</th>
+				<th v-if="categorized">
+					<span>EDIT</span>
 				</th>
 			</tr>
 		</thead>
+		<!-- Table body -->
 		<tbody>
 			<tr v-for="(name, index) in getKeys()" :key="index">
 				<td>{{index + 1}}</td>
 				<td>{{name}}</td>
 				<td>{{round(data[name])}}€</td>
+
+				<td v-if="changing === name" class="changeSelect">
+					<CategorySelect
+					@selection="changeCategory($event, title, name)"
+					:currCategory="title"/>
+				</td>
+				<td
+				v-else-if="categorized"
+				@click="changeClick(name)">
+					<i class="fas fa-edit"/>
+				</td>
 			</tr>
 		</tbody>
+		<!-- Table footer -->
 		<tfoot>
 			<tr>
 				<!--<td>x</td>-->
@@ -35,9 +52,14 @@
 </template>
 
 <script>
+import CategorySelect from './CategorySelect.vue'
 
 export default {
 	name: "TransactionTable",
+	components: {
+		CategorySelect
+	},
+	emits: ['categoryChange'],
 	props: {
 		data: {
 			type: Object,
@@ -46,13 +68,18 @@ export default {
 		title: {
 			type: String,
 			default: ''
+		},
+		categorized: {
+			type: Boolean,
+			default: false
 		}
 	},
 	data() {
 		return {
 			idx: 0,
 			sorting: "name",
-			reversed: true
+			reversed: true,
+			changing: ""
 		}
 	},
 	methods: {
@@ -92,6 +119,16 @@ export default {
 				this.changeOrder()
 			else 
 				this.changeSort()
+		},
+		changeClick(name) {
+			this.changing = name;
+			//console.log(this.changing);
+		},
+		changeCategory(newCategory, currCategory, name) {
+			//console.log(newCategory, currCategory, name)
+			//console.log(typeof(newCategory))
+			this.changing = "";
+			this.$emit('categoryChange', {name, currCategory, newCategory})
 		}
 	},
 	computed: {
@@ -108,13 +145,10 @@ export default {
 		}
 	}
 }
-
 </script>
 
 <style scoped>
-
 /* Table Styles */
-
 .table-wrapper{
     margin: 10px 70px 70px;
     box-shadow: 0px 35px 50px rgba( 0, 0, 0, 0.2 );
@@ -147,7 +181,6 @@ export default {
     background: #4FC3A1;
 }
 
-
 .fl-table thead th:nth-child(odd) {
     color: #ffffff;
     background: #324960;
@@ -155,6 +188,10 @@ export default {
 
 .fl-table tr:nth-child(even) {
     background: #F8F8F8;
+}
+
+.changeSelect {
+	width: 25%;
 }
 
 /* Responsive */

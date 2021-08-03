@@ -273,7 +273,7 @@ def change_item_category():
             session.abort_transaction()
             #print("transaction aborted")
 
-    return jsonify(status="ok", data=data)
+    return jsonify(status="OK", data=data)
 
 @app.route("/api/v1/categories", methods=['DELETE'])
 def remove_category_item():
