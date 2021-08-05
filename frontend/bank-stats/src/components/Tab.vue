@@ -6,7 +6,12 @@
 
 
 <script>
-import {ref, watch, inject, onBeforeMount} from "vue"
+import {
+	ref, 
+	watch, 
+	inject, 
+	onBeforeMount
+} from "vue"
 
 export default {
 	name: "Tab",

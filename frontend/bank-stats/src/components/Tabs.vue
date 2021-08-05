@@ -1,6 +1,6 @@
 <template>
-  <!-- Tab list --> 
 	<div class='tabs'>
+    <!-- Tab list --> 
 		<ul class='tabs__header'>
 			<li v-for='tab in tabs'
 				:key="tab.props.title"
@@ -10,10 +10,9 @@
 				{{tab.props.title}}
 			</li>
 		</ul>
+    <!-- slots --> 
+    <slot></slot>
 	</div>
-
-  <!-- slots --> 
-	<slot></slot>
 </template>
 
 <script>
@@ -30,9 +29,9 @@ export default {
 	setup(_, {slots}) {
     const state = reactive ({
       selectedTab: null,
-      tabs: slots.default(),
-      count: 0
+      tabs: slots.default()
     });
+
     provide("TabsProvider", state);
 
     const selectTab = (i) => {
@@ -41,17 +40,12 @@ export default {
     }
 
     const store = useStore()
-    //console.log(store.state.currTab)
 
-    //onMounted(() => selectTab("Incoming"))
-    onMounted(() => state.selectedTab = store.state.currTab)
+    //onMounted(() => state.selectedTab = store.state.currTab)
+    onMounted(() => state.selectedTab = store.getters.getCurrTab)
 
     return { ...toRefs(state), selectTab}
   },
-  data() {
-    return {
-    }
-  }
 }
 </script>
 

@@ -38,12 +38,23 @@ export default {
 	},
 	computed: {
 		displayCategories: function() {
-			console.log("hello")
+			//console.log("hello")
 			let keys =  Object.keys(this.data)
-			console.log(this.data)
-			console.log(keys)
+			//console.log(this.data)
+			//console.log(keys)
+
+			// remove and append other at the end of the array
+			let test = keys.indexOf("other")
+			//console.log("test", test)
+			if (test > -1) {
+				console.log(keys.splice(test, 1));
+				keys.push("other")
+			}
+
+			// remove categories that don't have any entries in them
+			//console.log(keys)
 			keys = keys.filter(category => Object.keys(this.data[category]).length !== 0)
-			console.log(keys)
+			//console.log(keys)
 			return keys
 		}
 	},
