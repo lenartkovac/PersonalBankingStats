@@ -10,6 +10,9 @@
 			<Tab title="Categorized">
 				<Categorized v-bind:month="month" />
 			</Tab>
+			<Tab title="Chart">
+				<PieChart v-bind:month="month" />
+			</Tab>
 		</Tabs>
 	</div>
 </template>
@@ -20,6 +23,7 @@ import Tab from './Tab.vue'
 import Incoming from './tabs/Incoming.vue'
 import Outgoing from './tabs/Outgoing.vue'
 import Categorized from './tabs/Categorized.vue'
+import PieChart from './tabs/PieChart.vue'
 
 export default {
 	components: {
@@ -27,7 +31,8 @@ export default {
 		Tab,
 		Incoming,
 		Outgoing,
-		Categorized
+		Categorized,
+		PieChart
 	},
 	props: {
 		month: {
