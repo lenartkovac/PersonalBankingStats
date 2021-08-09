@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="container">
 		<h1>Categories</h1>
 		<div class="error" v-if="dataError">
 			<div class="errmsg">
@@ -14,7 +14,13 @@
 			</div>
 		</div>
 		<div v-else>
-			<table>
+			<table class="fl-table">
+				<thead>
+					<tr>
+						<th>category name</th>
+						<th>delete</th>
+					</tr>
+				</thead>
 				<tbody>
 					<tr v-for="(name, idx) in data" :key="idx">
 						<td>{{name}}</td>
@@ -25,17 +31,21 @@
 
 			<br>
 
-			<input @input="clearInputError" v-model="message" placeholder="enter new category"/>
-			<button  @click="addCategory(message)">Add category</button>
+			<!-- new category input -->
+			<div class="addCategory">
+				<input @input="clearInputError" v-model="message" placeholder="enter new category"/>
+				<button  @click="addCategory(message)">Add category</button>
+			</div>
 
-			<div v-if="inputError">
-				<span class="error">{{inputError}}</span>
+			<div class="error" v-if="inputError">
+				<span>{{inputError}}</span>
 			</div>
 		</div>
 	</div>
 </template>
 
 <script>
+import '@/assets/style.css'
 
 export default {
 	name: "Settings",
@@ -117,11 +127,18 @@ export default {
 
 <style scoped>
 
+h1 {
+	margin-left: 5%;
+}
+
 .error {
 	background: rgba(255, 0, 0, 0.6);
 	padding: 0.2em;
+	margin-top: 0.3em;
 	border-radius: 0.3em;
+
 	text-align: center;
+	width: fit-content;
 }
 
 .errmsg {
@@ -132,9 +149,58 @@ input {
 	margin-bottom: 0.3em;
 }
 
+.addCategory {
+	display: flex;
+	/*
+	align-content: center;
+	*/
+	justify-content: center;
+}
+
 table {
 	border-spacing: 10px;
 	border-collapse: separate;
+}
+
+.table-wrapper{
+    margin: 10px 70px 70px;
+    box-shadow: 0px 35px 50px rgba( 0, 0, 0, 0.2 );
+}
+
+.fl-table {
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: normal;
+    border: none;
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 100%;
+    white-space: nowrap;
+    background-color: white;
+}
+
+.fl-table td, .fl-table th {
+    text-align: center;
+    padding: 8px;
+}
+
+.fl-table td {
+    border-right: 1px solid #f8f8f8;
+    font-size: 12px;
+}
+
+.fl-table thead th {
+    color: #ffffff;
+    background: #4FC3A1;
+}
+
+.fl-table thead th:nth-child(odd) {
+    color: #ffffff;
+    background: #324960;
+}
+
+.fl-table tr:nth-child(even) {
+    background: #F8F8F8;
 }
 
 </style>

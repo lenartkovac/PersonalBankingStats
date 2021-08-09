@@ -25,7 +25,6 @@ export default {
 	name: "Heading",
 	setup() {
 		const route = useRoute()
-		console.log(route)
 		
 		const path = computed(() => route.path)
 		return {path}

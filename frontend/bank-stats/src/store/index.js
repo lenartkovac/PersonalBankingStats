@@ -11,7 +11,6 @@ const mutations = {
 	},
 	changeMonth(state, payload) {
 		state.currMonth = payload
-		console.log("state month changed to ", payload)
 	}
 }
 

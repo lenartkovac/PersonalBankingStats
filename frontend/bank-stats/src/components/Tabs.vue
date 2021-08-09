@@ -1,7 +1,7 @@
 <template>
 	<div class='tabs'>
     <!-- Tab list --> 
-		<ul class='tabs__header'>
+		<ul class='tabs__header noSelect'>
 			<li v-for='tab in tabs'
 				:key="tab.props.title"
 				@click='selectTab(tab.props.title)'
@@ -24,6 +24,7 @@ import {
 } from "vue"
 
 import { useStore } from 'vuex'
+import '@/assets/style.css'
 
 export default {
 	setup(_, {slots}) {
@@ -41,7 +42,6 @@ export default {
 
     const store = useStore()
 
-    //onMounted(() => state.selectedTab = store.state.currTab)
     onMounted(() => state.selectedTab = store.getters.getCurrTab)
 
     return { ...toRefs(state), selectTab}

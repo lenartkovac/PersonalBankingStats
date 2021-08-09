@@ -38,23 +38,16 @@ export default {
 	},
 	computed: {
 		displayCategories: function() {
-			//console.log("hello")
 			let keys =  Object.keys(this.data)
-			//console.log(this.data)
-			//console.log(keys)
 
-			// remove and append other at the end of the array
+			//? remove and append other at the end of the array
 			let test = keys.indexOf("other")
-			//console.log("test", test)
 			if (test > -1) {
-				console.log(keys.splice(test, 1));
 				keys.push("other")
 			}
 
-			// remove categories that don't have any entries in them
-			//console.log(keys)
+			//? remove categories that don't have any entries in them
 			keys = keys.filter(category => Object.keys(this.data[category]).length !== 0)
-			//console.log(keys)
 			return keys
 		}
 	},
@@ -64,7 +57,6 @@ export default {
 		},
 		categoryChange({currCategory, newCategory, name}) {
 
-			//console.log(payload)
 			if (!currCategory || !newCategory || !name) {
 				console.error("Incomplete payload: Expected keys: currCategory, newCategory, name!")
 				return
@@ -79,8 +71,6 @@ export default {
 				console.error(`${name} is not in ${currCategory}!`)
 			}
 
-			//console.log(this.data[currCategory])
-			//console.log(this.data[currCategory][name])
 			let payload = {
 				"currentCategory": currCategory,
 				"newCategory": newCategory,
