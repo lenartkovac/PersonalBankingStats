@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, abort, request
+from flask import Flask, jsonify, abort, request, send_from_directory
 from Utils.TransactionOrganizer import Transactions, DBhandler, TransactionManager
 from flask_cors import CORS
 from flasgger import Swagger 
@@ -24,18 +24,16 @@ def resource_not_found(e):
 def internal_server_error(e="Internal server error"):
     return jsonify(error=str(e)), 500
 
+@app.route('/<path:path>', methods=['GET'])
+def static_proxy(path):
+    return send_from_directory('../frontend/bank-stats/dist', path)
+
 @app.route("/")
 def hello_world():
     """
-    Base path to check if server is online
-    ---
-    tags:
-        - base
-    responses:
-        200:
-            description: server is online
+    serve website
     """
-    return jsonify(status="online"), 200
+    return send_from_directory('../frontend/bank-stats/dist', 'index.html')
 
 
 #! Transactions API
@@ -263,9 +261,11 @@ def change_item_category():
         session.start_transaction()
 
         try:
-            removal = handleDBreq(delPayload, DBhandler.delFromCategory, session)
+            if not data.get("currentCategory") == "other":
+                removal = handleDBreq(delPayload, DBhandler.delFromCategory, session)
             #print(removal.json)
-            addition = handleDBreq(addPayload, DBhandler.addToCategory, session)
+            if not data.get("newCategory") == "other":
+                addition = handleDBreq(addPayload, DBhandler.addToCategory, session)
             #print(addition.json)
             session.commit_transaction()
             #print("transaction commited")
@@ -344,4 +344,4 @@ def get_category_names():
     return jsonify(status="OK", data=categories)
 
 if __name__ == "__main__":
-    app.run("localhost", 5000)
+    app.run(host="localhost", port=8000)
