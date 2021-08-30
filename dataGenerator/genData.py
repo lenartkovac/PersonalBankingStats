@@ -32,9 +32,9 @@ def getRandomIncomingTitle():
 
 def getRandomOutgoingTitle():
 	outcomeStatement = [
-		"Grocery store 1",
-		"Grocery store 2",
-		"Grocery store 3",
+		"Grocery store A",
+		"Grocery store B",
+		"Grocery store C",
 		"Gas station",
 		"Train ticket",
 		"Bus ticket",
@@ -44,28 +44,31 @@ def getRandomOutgoingTitle():
 		"Phone bill",
 		"Internet bill",
 		"Car repair",
-		"Sports store 1",
-		"Sports store 2",
-		"Sports store 3",
-		"Clothing store 1",
-		"Clothing store 2",
-		"Clothing store 3",
+		"Sports store A",
+		"Sports store B",
+		"Sports store C",
+		"Clothing store A",
+		"Clothing store B",
+		"Clothing store C",
 		"Movie subscription",
 		"GYM subscription",
 		"Movie tickets",
-		"Restaurant 1",
-		"Restaurant 2",
-		"Restaurant 3"
+		"Restaurant A",
+		"Restaurant B",
+		"Restaurant C",
+		"Pet store A",
+		"Pet store B",
+		"Pet store C",
+		"Bar A",
+		"Bar B",
+		"Bar C"
 	]
 	return outcomeStatement[random.randint(0, len(outcomeStatement) - 1)]
 
 
 def generateLine(date: str, ratio=0.7) -> str:
 	IBAN = "SI12345679087654321"
-	#TODO: generate random date
-	#TODO: decide between income/outcome
 	day = random.randint(1, 28)
-	#date = f"{day:02}.{month:02}.{year:04}"
 	amount = round(random.random() * random.randint(1, 1000), 2)
 	currency = "EUR"
 
@@ -77,9 +80,11 @@ def generateLine(date: str, ratio=0.7) -> str:
 def generateFile(fileName: str, path: str):
 	header = "�T. IZPISKA;POGODBA;RA�UN;DATUM KNJI�ENJA;DATUM VALUTE;DOBRO;BREME;VALUTA;NAMEN;SKLIC V DOBRO;SKLIC V BREME;UDELE�ENEC - RA�UN;UDELE�ENEC - NAZIV;UDELE�ENEC - BIC;KODA NAMENA;PRILIV V IZVORNI VALUTI;ODLIV V IZVORNI VALUTI;IZVORNA VALUTA\n"
 	year = int(fileName[0:4])
-	month = int(fileName[6:8])
+	month = int(fileName[5:7])
 	ratio = 0.7
 	maxDay = getMonthMaxDay(month)
+	print(year, month, maxDay)
+	print(fileName[6:8])
 
 	days = sorted([random.randint(1, maxDay) for x in range(random.randint(15, 60))])
 	with open(f"{path}/{fileName}.csv", "x") as file:
@@ -92,8 +97,6 @@ def generateFile(fileName: str, path: str):
 def main(name, path):
 	generateFile(name, path)
 	
-
-
 
 if __name__ == "__main__":
 	path = "."
