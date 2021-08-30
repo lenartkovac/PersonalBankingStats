@@ -1,16 +1,25 @@
 <template>
 	<div>
-		<canvas id="chart" width="100%" height="70%"></canvas>
+		<div v-if="dataError">
+			<Error :message="dataError" @reload="handleReload"/>
+		</div>
+		<div v-else>
+			<canvas id="chart" width="100%" height="70%"></canvas>
+		</div>
 	</div>
 </template>
 
 <script>
-//import { Pie } from 'vue-chartjs'
 import Chart from 'chart.js/auto'
+import { API_URL } from '@/assets/constants'
+import '@/assets/style.css'
+import Error from '@/components/reusables/Error'
 
 export default {
 	name: "PieChart",
-	//extends: Pie,
+	components: {
+		Error
+	},
 	props: {
 		month: {
 			type: Number
@@ -18,7 +27,8 @@ export default {
 	},
 	data() {
 		return {
-			data: null
+			data: null,
+			dataError: ""
 		}
 	},
 	methods: {
@@ -60,23 +70,34 @@ export default {
 			//! not always necessary, but vue compiler will throw error:
 			//! "'myChart' is assigned a value but never used"
 			myChart.draw()
+		},
+		loadData() {
+			this.axios.get(`${API_URL}/transactions/${this.month}/outgoing/categorized`)
+				.then(response => {
+					if (!response 
+					|| !response.data 
+					|| response.data.status !== "OK" 
+					|| !response.data.data) {
+						this.error = "Error retrieving data"
+					}
+					this.data = response.data.data
+					this.showChart()
+				})
+				.catch(error => {
+					if (error.response && error.response.data && error.response.data.error) {
+						this.dataError = error.response.data.error
+						return
+					}
+					this.dataError = error.message
+				})
+		},
+		handleReload() {
+			this.dataError = "",
+			this.loadData()
 		}
 	},
 	mounted() {
-		this.axios.get(`http://localhost:5000/api/v1/transactions/${this.month}/outgoing/categorized`)
-			.then(response => {
-				if (!response 
-				|| !response.data 
-				|| response.data.status !== "OK" 
-				|| !response.data.data) {
-					this.error = "Error retrieving data"
-				}
-				this.data = response.data.data
-				this.showChart()
-			})
-			.catch(error => {
-				console.error("error: ", error)
-			})
+		this.loadData()
 	}
 }
 </script>

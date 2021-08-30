@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import Heading from './components/Heading.vue'
+import Heading from '@/components/layout/Heading.vue'
 
 export default {
   name: 'App',

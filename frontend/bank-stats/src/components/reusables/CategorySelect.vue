@@ -10,6 +10,8 @@
 </template>
 
 <script>
+import { API_URL } from '@/assets/constants'
+
 export default {
 	name: "CategorySelect",
 	props: {
@@ -30,7 +32,7 @@ export default {
 		}
 	},
 	mounted() {
-		this.axios.get('http://localhost:5000/api/v1/categories/names')
+		this.axios.get(`${API_URL}/categories/names`)
 			.then((response) => {
 				if (!response 
 				|| !response.data 

@@ -13,7 +13,7 @@
 
 
 <script>
-import MonthStats from './MonthStats.vue'
+import MonthStats from '@/components/layout/MonthStats.vue'
 import '@/assets/style.css'
 
 export default {

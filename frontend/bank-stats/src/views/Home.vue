@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import Controller from '../components/Controller.vue'
+import Controller from '@/components/layout/Controller.vue'
 
 export default {
   name: 'Home',

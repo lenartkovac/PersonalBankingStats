@@ -1,17 +1,8 @@
 <template>
-	<div class="container">
+	<div class="container mar-top">
 		<h1>Categories</h1>
-		<div class="error" v-if="dataError">
-			<div class="errmsg">
-				<span>{{dataError}}</span>
-			</div>
-			<div class="reloadIcon">
-				<i class="fas fa-sync"/>
-			</div>
-
-			<div class="reloadText">
-				<span>reload page</span>
-			</div>
+		<div class="dataError" v-if="dataError">
+			<Error :message="dataError" @reload="handleReload" />
 		</div>
 		<div v-else>
 			<table class="fl-table">
@@ -29,14 +20,18 @@
 				</tbody>
 			</table>
 
+			<div class="error" v-if="deleteError">
+				<span>{{deleteError}}</span>
+			</div>
 			<br>
 
 			<!-- new category input -->
 			<div class="addCategory">
-				<input @input="clearInputError" v-model="message" placeholder="enter new category"/>
-				<button  @click="addCategory(message)">Add category</button>
+				<input class="inputField" type="input" name="addCategory" id="addCategory" @input="clearInputError" v-model="message" placeholder="test" required/>
+				<label class="inputLabel" for="addCategory">Enter new category</label>
+				<button @click="addCategory(message)">Add category</button>
 			</div>
-
+			
 			<div class="error" v-if="inputError">
 				<span>{{inputError}}</span>
 			</div>
@@ -45,19 +40,29 @@
 </template>
 
 <script>
+import Error from '@/components/reusables/Error.vue'
 import '@/assets/style.css'
+import { API_URL } from '@/assets/constants'
 
 export default {
 	name: "Settings",
+	components: {
+		Error
+	},
 	data() {
 		return {
 			data: null,
 			message: "",
 			dataError: null,
+			deleteError: "",
 			inputError: "",
 		}
 	},
 	methods: {
+		handleReload() {
+			this.dataError = ""
+			this.loadCategoryNames()
+		},
 		addCategory(catName) {
 
 			if (catName.length < 1) {
@@ -72,7 +77,7 @@ export default {
 
 			let payload = {}
 			payload[catName] = ""
-			this.axios.post('http://localhost:5000/api/v1/categories', payload)
+			this.axios.post(`${API_URL}/categories`, payload)
 				.then(response => {
 					if (!response
 					|| !response.data
@@ -88,28 +93,42 @@ export default {
 			this.message = ""
 		},
 		removeCategory(catName) {
-			this.axios.delete(`http://localhost:5000/api/v1/categories/${catName}/delete`)
+			this.axios.delete(`${API_URL}/categories/${catName}/delete`)
 				.then(response => {
-					//TODO: edge case error matching
-					console.log(response)
+					if (!response || response.status !== 204) {
+						if (response.data && response.data.error) {
+							this.deleteError = response.data.error
+						} else {
+							this.deleteError = "Error deleting category"
+						}
+						return
+					}
 					this.loadCategoryNames()
 				})
 				.catch(error => {
-					this.inputError = error.message
+					if (error.response && error.response.data && error.response.data.error) {
+						this.deleteError = error.response.data.error
+						return
+					}
+					this.deleteError = error.message
 				})
 		},
 		loadCategoryNames() {
-			this.axios.get(`http://localhost:5000/api/v1/categories/names`)
-				.then((response) => {
+			this.axios.get(`${API_URL}/categories/names`)
+				.then(response => {
 					if (!response 
 					|| !response.data 
 					|| response.data.status !== "OK" 
 					|| !response.data.data) {
-						this.error = "Error retrieving data"
+						this.dataError = "Error retrieving data"
 					}
-					this.data = response.data.data.sort()
+					this.data = response.data.data.filter(el => el !== "other").sort()
 				})
 				.catch(error => {
+					if (error.response && error.response.data && error.response.data.error) {
+						this.dataError = error.response.data.error
+						return
+					}
 					this.dataError = error.message
 				})
 		},
@@ -131,30 +150,74 @@ h1 {
 	margin-left: 5%;
 }
 
-.error {
-	background: rgba(255, 0, 0, 0.6);
-	padding: 0.2em;
-	margin-top: 0.3em;
-	border-radius: 0.3em;
-
-	text-align: center;
-	width: fit-content;
-}
-
-.errmsg {
-	margin-bottom: 1em;
-}
-
-input {
-	margin-bottom: 0.3em;
+.mar-top {
+	margin-top: 4em;
 }
 
 .addCategory {
 	display: flex;
-	/*
-	align-content: center;
-	*/
-	justify-content: center;
+	width: 75%;
+	margin-bottom: 0.2em;
+	margin-left: 25%;
+	position: relative;
+}
+
+.inputField {
+	border: 0;
+	border-bottom: 2px solid lightgray;
+	outline: 0;
+	transition: border-color 0.2s;
+	margin-right: 0.5em;
+}
+
+.inputField::placeholder {
+	color: transparent;
+}
+
+.inputField:placeholder-shown ~ .inputLabel {
+	bottom: 1px;
+	left: 5px;
+	font-size: 14px;
+}
+
+.inputLabel {
+	position: absolute;
+	bottom: 20px;
+	font-size: 12px;
+	transition: all 0.2s ease-in-out;
+}
+
+.inputField:focus {
+	border-color: #4FC3A1;
+}
+
+.inputField:focus ~ .inputLabel {
+	color: #4FC3A1;
+	bottom: 20px;
+	font-size: 12px;
+}
+
+button {
+	background-color: white;
+	border-radius: 0.3em;
+	border: 1px solid lightgray;
+	box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+button:hover {
+	background-color: #4FC3A1;
+	color: white;
+	border-color: #4FC3A1;
+}
+
+.error {
+	background: rgba(255, 0, 0, 0.6);
+	margin: 0.1em auto ;
+	padding: 0.2em 2em;
+	border-radius: 0.5em;
+
+	text-align: center;
+	width: fit-content;
 }
 
 table {

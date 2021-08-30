@@ -1,6 +1,6 @@
 <template>
-	<div v-if="error">
-		{{error}}
+	<div v-if="dataError">
+		<Error :message="dataError" @reload="handleReload" />
 	</div>
 	<div v-else>
 		<TransactionTable v-bind:data="data" title="outgoing"/>
@@ -8,12 +8,15 @@
 </template>
 
 <script>
-import TransactionTable from '../TransactionTable.vue'
+import TransactionTable from '@/components/reusables/TransactionTable.vue'
+import Error from '@/components/reusables/Error.vue'
+import { API_URL } from '@/assets/constants'
 
 export default {
 	name: "Outgoing",
 	components: {
-		TransactionTable
+		TransactionTable,
+		Error
 	},
 	props: {
 		month: {
@@ -21,24 +24,40 @@ export default {
 			default: 0
 		}
 	},
-	data () {
+	data() {
 		return {
 			title: "Outgoing",
-			error: null,
+			dataError: "",
 			data: {}
 		}
 	},
+	methods: {
+		loadData() {
+			this.axios.get(`${API_URL}/transactions/${this.month}/outgoing`)
+				.then(response => {
+					if (!response 
+					|| !response.data 
+					|| response.data.status !== "OK" 
+					|| !response.data.data) {
+						this.dataError = "Error retrieving data";
+					}
+					this.data = response.data.data;
+				})
+				.catch(error => {
+					if (error.response && error.response.data && error.response.data.error) {
+						this.dataError = error.response.data.error
+						return
+					}
+					this.dataError = error.message
+				})
+		},
+		handleReload() {
+			this.dataError = ""
+			this.loadData()
+		}
+	},
 	mounted() {
-		this.axios.get(`http://localhost:5000/api/v1/transactions/${this.month}/outgoing`)
-			.then((response) => {
-				if (!response 
-				|| !response.data 
-				|| response.data.status !== "OK" 
-				|| !response.data.data) {
-					this.error = "Error retrieving data";
-				}
-				this.data = response.data.data;
-			});
+		this.loadData()
 	}
 }
 </script>

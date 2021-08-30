@@ -1,6 +1,9 @@
 <template>
 <div>
-	<div v-if="!error">
+	<div v-if="dataError">
+		<Error :message="dataError" @reload="handlReload"/>
+	</div>
+	<div v-else>
 		<div v-for="category in displayCategories" :key="category">
 			<h3>{{capitalize(category)}}</h3>
 			<TransactionTable 
@@ -10,18 +13,20 @@
 			v-bind:title="category"/>
 		</div>
 	</div>
-	<div v-if="error">
-		<h3> {{error}}</h3>
-	</div>
+	<div class="mar-bot"/>
 </div>
 </template>
 
 <script>
-import TransactionTable from '../TransactionTable.vue'
+import TransactionTable from '@/components/reusables/TransactionTable.vue'
+import Error from '@/components/reusables/Error.vue'
+import { API_URL } from '@/assets/constants'
+
 export default {
 	name: "Incoming",
 	components: {
-		TransactionTable
+		TransactionTable,
+		Error
 	},
 	props: {
 		month: {
@@ -33,7 +38,7 @@ export default {
 		return {
 			title: "Categorized",
 			data: {},
-			error: null
+			dataError: "",
 		}
 	},
 	computed: {
@@ -41,8 +46,9 @@ export default {
 			let keys =  Object.keys(this.data)
 
 			//? remove and append other at the end of the array
-			let test = keys.indexOf("other")
-			if (test > -1) {
+			let idx = keys.indexOf("other")
+			if (idx > -1) {
+				keys.splice(idx, 1)
 				keys.push("other")
 			}
 
@@ -76,11 +82,10 @@ export default {
 				"newCategory": newCategory,
 				"name": name
 			}
-			this.axios.put('http://localhost:5000/api/v1/categories', payload)
+			this.axios.put(`${API_URL}/categories`, payload)
 				.then(response => {
 					if (!response 
 					|| !response.data) {
-						this.error = "Error making stuff"
 						console.error("Error in the response for change")
 					}
 
@@ -95,19 +100,33 @@ export default {
 					console.error(error)
 				})
 			
+		},
+		loadCategories() {
+			this.axios.get(`${API_URL}/transactions/${this.month}/outgoing/categorized`)
+				.then(response => {
+					if (!response 
+					|| !response.data 
+					|| response.data.status !== "OK" 
+					|| !response.data.data) {
+						this.dataError = "Error retrieving data"
+					}
+					this.data = response.data.data
+				})
+				.catch(error => {
+					if (error.response && error.response.data && error.response.data.error) {
+						this.dataError = error.response.data.error
+						return
+					}
+					this.dataError = error.message
+				})
+		},
+		handleReload() {
+			this.dataError = ""
+			this.loadCategories()
 		}
 	},
 	mounted() {
-		this.axios.get(`http://localhost:5000/api/v1/transactions/${this.month}/outgoing/categorized`)
-			.then((response) => {
-				if (!response 
-				|| !response.data 
-				|| response.data.status !== "OK" 
-				|| !response.data.data) {
-					this.error = "Error retrieving data"
-				}
-				this.data = response.data.data
-			})
+		this.loadCategories()
 	}
 }
 </script>

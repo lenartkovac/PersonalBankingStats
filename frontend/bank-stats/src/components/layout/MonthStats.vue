@@ -18,12 +18,12 @@
 </template>
 
 <script>
-import Tabs from './Tabs.vue'
-import Tab from './Tab.vue'
-import Incoming from './tabs/Incoming.vue'
-import Outgoing from './tabs/Outgoing.vue'
-import Categorized from './tabs/Categorized.vue'
-import PieChart from './tabs/PieChart.vue'
+import Categorized from '@/components/tabs/Categorized.vue'
+import Incoming from '@/components/tabs/Incoming.vue'
+import Outgoing from '@/components/tabs/Outgoing.vue'
+import PieChart from '@/components/tabs/PieChart.vue'
+import Tab from '@/components/reusables/Tab.vue'
+import Tabs from '@/components/layout/Tabs.vue'
 
 export default {
 	components: {
@@ -42,14 +42,3 @@ export default {
 	}
 }
 </script>
-
-<style>
-.container {
-	border: 1px;
-	border-style: solid;
-	border-color: black;
-	border-radius: 1em;
-	box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-}
-
-</style>

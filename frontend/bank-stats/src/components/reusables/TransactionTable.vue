@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import CategorySelect from './CategorySelect.vue'
+import CategorySelect from '@/components/reusables/CategorySelect.vue'
 import '@/assets/style.css'
 
 export default {
@@ -145,13 +145,9 @@ export default {
 
 <style scoped>
 /* Table Styles */
-.table-wrapper{
-    margin: 10px 70px 70px;
-    box-shadow: 0px 35px 50px rgba( 0, 0, 0, 0.2 );
-}
 
 .fl-table {
-    border-radius: 5px;
+    border-radius: 1.2em;
     font-size: 12px;
     font-weight: normal;
     border: none;
