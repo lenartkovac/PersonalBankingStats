@@ -1,7 +1,7 @@
 <template>
 	<div class="container mar-top">
 		<h1>Categories</h1>
-		<div class="dataError" v-if="dataError">
+		<div v-if="dataError">
 			<Error :message="dataError" @reload="handleReload" />
 		</div>
 		<div v-else>
@@ -20,7 +20,7 @@
 				</tbody>
 			</table>
 
-			<div class="error" v-if="deleteError">
+			<div class="delError" v-if="deleteError">
 				<span>{{deleteError}}</span>
 			</div>
 			<br>
@@ -32,7 +32,7 @@
 				<button @click="addCategory(message)">Add category</button>
 			</div>
 			
-			<div class="error" v-if="inputError">
+			<div class="inputError" v-if="inputError">
 				<span>{{inputError}}</span>
 			</div>
 		</div>
@@ -210,7 +210,7 @@ button:hover {
 	border-color: #4FC3A1;
 }
 
-.error {
+.inputError, .delError {
 	background: rgba(255, 0, 0, 0.6);
 	margin: 0.1em auto ;
 	padding: 0.2em 2em;
@@ -219,6 +219,7 @@ button:hover {
 	text-align: center;
 	width: fit-content;
 }
+
 
 table {
 	border-spacing: 10px;
