@@ -8,13 +8,6 @@ app = Flask(__name__)
 Swagger(app)
 CORS(app)
 
-#APIPREFIX = "/api"
-#VERSION = "v1"
-#TRANSPREFIX = "transactions"
-#CATPREFIX = "categories"
-#
-#APIPATH = "/".join([APIPREFIX, VERSION])
-
 #! API
 @app.errorhandler(404)
 def resource_not_found(e):
@@ -38,18 +31,21 @@ def hello_world():
 
 #! Transactions API
 #* Helper functions
-def getTransactions(month: int):
+def getTransactions(year: int, month: int) -> Transactions:
     try: 
-        return TransactionManager.getTransactions(month - 1)
+        return TransactionManager.getTransactions(year, month)
     except Exception as e:
-        #print(e)
         abort(404, "Data for this month does not exist")
 
-def handleRequest(month: int, dataType: str):
+def handleRequest(year: int, month: int, dataType: str):
     if month < 1 or month > 12:
         abort(404, "Month values must be between 1 and 12") 
 
-    transactions = getTransactions(month)
+    try:
+        transactions = getTransactions(year, month)
+    except Exception as e:
+        print(e)
+        abort(500)
 
     if not transactions: 
         abort(500)
@@ -62,14 +58,13 @@ def handleRequest(month: int, dataType: str):
     elif dataType == "outgoing": data = transactions.outgoing
     elif dataType == "incoming": data = transactions.incoming
     elif dataType == "outgoing_cat": data = transactions.outgoing_cat
-    #else: raise ValueError("Incorrect data type")
     else: abort(500)
 
     return jsonify(status="OK", data=data)
 
 #* Routes
-@app.route("/api/v1/transactions/<int:month>")
-def transactions(month):
+@app.route("/api/v1/transactions/<int:year>/<int:month>")
+def transactions(year, month):
     """
     Get incoming and outgoing transactios for selected month
     ---
@@ -90,11 +85,11 @@ def transactions(month):
         500:
             description: Internal sevver error retreiving transactions
     """
-    return handleRequest(month, "ALL")
+    return handleRequest(year, month, "ALL")
 
 #@app.route("/api/v1/transactions/<int:month>/incoming")
-@app.route("/api/v1/transactions/<int:month>/incoming")
-def transactions_incoming(month):
+@app.route("/api/v1/transactions/<int:year>/<int:month>/incoming")
+def transactions_incoming(year, month):
     """
     Get incoming transactions
     ---
@@ -114,10 +109,10 @@ def transactions_incoming(month):
         500:
             description: Internal sevver error retreiving transactions
     """
-    return handleRequest(month, "incoming")
+    return handleRequest(year, month, "incoming")
 
-@app.route("/api/v1/transactions/<int:month>/outgoing")
-def transactions_outgoing(month):
+@app.route("/api/v1/transactions/<int:year>/<int:month>/outgoing")
+def transactions_outgoing(year, month):
     """
     Get outgoing transactions
     ---
@@ -137,10 +132,10 @@ def transactions_outgoing(month):
         500:
             description: Internal sevver error retreiving transactions
     """
-    return handleRequest(month, "outgoing")
+    return handleRequest(year, month, "outgoing")
 
-@app.route("/api/v1/transactions/<int:month>/outgoing/categorized")
-def transactions_outgoing_categorized(month):
+@app.route("/api/v1/transactions/<int:year>/<int:month>/outgoing/categorized")
+def transactions_outgoing_categorized(year, month):
     """
     Get categorized outgoing transactions
     ---
@@ -161,7 +156,7 @@ def transactions_outgoing_categorized(month):
         500:
             description: Internal sevver error retreiving transactions
     """
-    return handleRequest(month, "outgoing_cat")
+    return handleRequest(year, month, "outgoing_cat")
 
 #! categories API
 #* Helper functions

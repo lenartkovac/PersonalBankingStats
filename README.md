@@ -13,6 +13,8 @@ vue, flask, python....
 
 # Project tasks 
 
-* TODO: make logo!
-* README file
-* docker? Maaaaybe???
+
+* add years!
+* edit README file
+*  make logo! !!!!Cannot, wait until zii patcher updates!!!!
+* docker. For the fun of it

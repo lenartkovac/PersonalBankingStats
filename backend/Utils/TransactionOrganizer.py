@@ -52,27 +52,6 @@ class DBhandler:
         cls._db[category].delete_one({"name": term}, session=session)
 
 
-class TransactionManager:
-    req_num = 0
-    transactions = [None for x in range(12)]
-
-    @classmethod
-    def logRequest(cls):
-        cls.req_num += 1
-        return cls.req_num
-
-    @classmethod
-    def printTransactions(cls):
-        print(cls.transactions)
-
-    @classmethod
-    def getTransactions(cls, index):
-        if not cls.transactions[index]:
-            cls.transactions[index] = Transactions(2021, index + 1)
-        return cls.transactions[index]
-        #return Transactions(2021, index + 1)
-
-
 class Transactions:
     """
     Transactions class loads and stores transaction information for a given month and catogerizes the data based on the categories it receives from the database
@@ -80,7 +59,15 @@ class Transactions:
     #! Static database client
 
     def __init__(self, year, month, datadir="data"):
+        self._year = year
+        self._month = month
         self.transactions = DataLoader.monthlyData(year, month, datadir)
+    
+    def __str__(self):
+        return f"Transactions for {self._year}.{self._month:02}"
+
+    def __repr__(self):
+        return self.__str__()
 
     def _loadCategories(self):
         print("LOADING CATEGORIES")
@@ -126,19 +113,37 @@ class Transactions:
                 result[transaction.get("NAMEN")] = transaction.get("DOBRO")
         return result 
 
+class TransactionManager:
+    transactions = {}
+
+    @classmethod
+    def printTransactions(cls):
+        print(cls.transactions)
+
+    @classmethod
+    def getTransactions(cls, year: int, month: int, datadir="data") -> Transactions:
+        if not cls.transactions.get(year):
+            cls.transactions[year] = {}
+
+        if not cls.transactions[year].get(month):
+            cls.transactions[year][month] = Transactions(year, month, datadir)
+
+        return cls.transactions[year][month]
+
+
 #! Testing
 if __name__ == "__main__":
     #! DBhandler 
     #print(DBhandler._categories)
 
     ##! Transactions
-    monthTest = Transactions(2021, 1, datadir="/Users/lenartkovac/Projects/PersonalBankingStats/data")
+    #monthTest = Transactions(2021, 1, datadir="/Users/lenartkovac/Projects/PersonalBankingStats/data")
     #january._loadCategories()
-    pprint(monthTest.outgoing_cat)
+    #pprint(monthTest.outgoing_cat)
     #pprint(january.outgoing_cat)
 
     ##! TransactionManager
-    #TransactionManager.printTransactions()
-    #print(TransactionManager.getTransactions(0))
-    #print(TransactionManager.getTransactions(3))
-    #TransactionManager.printTransactions()
+    TransactionManager.printTransactions()
+    print(TransactionManager.getTransactions(2021, 1, '../../data'))
+    print(TransactionManager.getTransactions(2020, 3, '../../data'))
+    TransactionManager.printTransactions()

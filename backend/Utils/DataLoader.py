@@ -8,9 +8,9 @@ class DataLoader:
     @staticmethod
     def monthlyData(year: int, month: int, datadir="data") -> [dict()]:
         dicts = []
-        if not datadir[-1] == '/':
-            datadir += '/'
-        with open(f"{datadir}{year}_{month:02}.csv", "r", encoding="cp1250") as csvfile:
+        if datadir[-1] == '/':
+            datadir = datadir[:-1]
+        with open(f"{datadir}/{year}/{year}_{month:02}.csv", "r", encoding="cp1250") as csvfile:
             readerDict = csv.DictReader(csvfile, delimiter=";")
             for row in readerDict:
 
