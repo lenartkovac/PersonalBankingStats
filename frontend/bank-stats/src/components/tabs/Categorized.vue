@@ -8,9 +8,9 @@
 			<h3>{{capitalize(category)}}</h3>
 			<TransactionTable 
 			@categoryChange="categoryChange"
-			v-bind:data="data[category]"
-			v-bind:categorized="true"
-			v-bind:title="category"/>
+			:data="data[category]"
+			:categorized="true"
+			:title="category"/>
 		</div>
 	</div>
 	<div class="mar-bot"/>
@@ -29,9 +29,8 @@ export default {
 		Error
 	},
 	props: {
-		month: {
-			type: Number,
-			default: 0
+		date: {
+			type: Object
 		}
 	},
 	data() {
@@ -102,7 +101,7 @@ export default {
 			
 		},
 		loadCategories() {
-			this.axios.get(`${API_URL}/transactions/${this.month}/outgoing/categorized`)
+			this.axios.get(`${API_URL}/transactions/${this.date.getFullYear()}/${this.date.getMonth() + 1}/outgoing/categorized`)
 				.then(response => {
 					if (!response 
 					|| !response.data 

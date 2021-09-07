@@ -19,9 +19,8 @@ export default {
 		Error
 	},
 	props: {
-		month: {
-			type: Number,
-			default: 0
+		date: {
+			type: Object
 		}
 	},
 	data() {
@@ -33,7 +32,7 @@ export default {
 	},
 	methods: {
 		loadData() {
-			this.axios.get(`${API_URL}/transactions/${this.month}/outgoing`)
+			this.axios.get(`${API_URL}/transactions/${this.date.getFullYear()}/${this.date.getMonth() + 1}/outgoing`)
 				.then(response => {
 					if (!response 
 					|| !response.data 

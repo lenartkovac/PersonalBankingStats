@@ -1,12 +1,14 @@
 <template>
 	<div>
 		<div class="controller noSelect">
-			<span class="prev" @click="decMonth"><i class="fas fa-chevron-left"/></span>
-			<span>{{months[currentMonth - 1]}}</span>
-			<span class="next" @click="incMonth"><i class="fas fa-chevron-right"/></span>
+			<span class="prev" title="previous year" @click="changeDate(0, -1)"><i class="fas fa-angle-double-left"/></span>
+			<span class="prev" title="previous month" @click="changeDate(-1, 0)"><i class="fas fa-chevron-left"/></span>
+			<span>{{months[date.getMonth()]}} {{date.getFullYear()}}</span>
+			<span class="next" title="next month" v-if="!maxMonth" @click="changeDate(1, 0)"><i class="fas fa-chevron-right"/></span>
+			<span class="next" title="next year" v-if="!maxYear"  @click="changeDate(0, 1)"><i class="fas fa-angle-double-right"/></span>
 		</div>
 		<div class="container">
-			<MonthStats v-bind:month="currentMonth" :key="currentMonth"/>
+			<MonthStats :date="date" :key="date"/>
 		</div>
 	</div>
 </template>
@@ -15,6 +17,7 @@
 <script>
 import MonthStats from '@/components/layout/MonthStats.vue'
 import '@/assets/style.css'
+import { mapState } from 'vuex'
 
 export default {
 	name: "Controller",
@@ -23,7 +26,6 @@ export default {
 	},
 	data() {
 		return {
-			currentMonth: 2,
 			months: [
 				"January",
 				"February",
@@ -41,17 +43,18 @@ export default {
 		}
 	},
 	methods: {
-		incMonth() {
-			this.currentMonth = this.currentMonth == 12 ? 1 : this.currentMonth + 1;
-			this.$store.commit('changeMonth', this.currentMonth)
-		},
-		decMonth() {
-			this.currentMonth = this.currentMonth ==  1 ? 12 : this.currentMonth - 1;
-			this.$store.commit('changeMonth', this.currentMonth)
+		changeDate(monthDiff, yearDiff) {
+			this.$store.dispatch('changeDate', {monthDiff, yearDiff});
 		}
 	},
-	mounted() {
-		this.currentMonth = this.$store.getters.getCurrMonth
+	computed: {
+		maxYear: function() {
+			return this.date.getFullYear() == new Date().getFullYear();
+		},
+		maxMonth: function() {
+			return this.maxYear && this.date.getMonth() == new Date().getMonth();
+		},
+		...mapState(['date'])
 	}
 }
 

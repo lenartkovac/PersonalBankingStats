@@ -2,16 +2,16 @@
 	<div>
 		<Tabs>
 			<Tab title="Incoming">
-				<Incoming v-bind:month="month" />
+				<Incoming :date="date" />
 			</Tab>
 			<Tab title="Outgoing">
-				<Outgoing v-bind:month="month" />
+				<Outgoing :date="date" />
 			</Tab>
 			<Tab title="Categorized">
-				<Categorized v-bind:month="month" />
+				<Categorized :date="date" />
 			</Tab>
 			<Tab title="Chart">
-				<PieChart v-bind:month="month" />
+				<PieChart :date="date" />
 			</Tab>
 		</Tabs>
 	</div>
@@ -35,9 +35,8 @@ export default {
 		PieChart
 	},
 	props: {
-		month: {
-			type: Number,
-			default: 1
+		date: {
+			type: Object
 		}
 	}
 }

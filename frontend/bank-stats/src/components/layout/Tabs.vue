@@ -42,7 +42,7 @@ export default {
 
     const store = useStore()
 
-    onMounted(() => state.selectedTab = store.getters.getCurrTab)
+    onMounted(() => state.selectedTab = store.getters.currTab)
 
     return { ...toRefs(state), selectTab}
   },

@@ -21,8 +21,8 @@ export default {
 		Error
 	},
 	props: {
-		month: {
-			type: Number
+		date: {
+			type: Object 
 		}
 	},
 	data() {
@@ -72,7 +72,7 @@ export default {
 			myChart.draw()
 		},
 		loadData() {
-			this.axios.get(`${API_URL}/transactions/${this.month}/outgoing/categorized`)
+			this.axios.get(`${API_URL}/transactions/${this.date.getFullYear()}/${this.date.getMonth() + 1}/outgoing/categorized`)
 				.then(response => {
 					if (!response 
 					|| !response.data 
