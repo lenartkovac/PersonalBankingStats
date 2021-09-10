@@ -1,4 +1,4 @@
-import { createStore } from 'vuex'
+import { createStore } from 'vuex';
 
 const state = {
 	currTab: 'Incoming',
@@ -38,4 +38,4 @@ const store = createStore({
 	getters
 });
 
-export default store
+export default store;

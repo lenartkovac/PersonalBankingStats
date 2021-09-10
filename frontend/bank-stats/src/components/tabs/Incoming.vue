@@ -8,12 +8,12 @@
 </template>
 
 <script>
-import TransactionTable from '@/components/reusables/TransactionTable.vue'
-import Error from '@/components/reusables/Error.vue'
-import { API_URL } from '@/assets/constants'
+import TransactionTable from '@/components/reusables/TransactionTable.vue';
+import Error from '@/components/reusables/Error.vue';
+import { API_URL } from '@/assets/constants';
 
 export default {
-	name: "Incoming",
+	name: 'Incoming',
 	components: {
 		TransactionTable,
 		Error
@@ -25,10 +25,10 @@ export default {
 	},
 	data() {
 		return {
-			title: "Incoming",
+			title: 'Incoming',
 			data: {},
-			dataError: ""
-		}
+			dataError: ''
+		};
 	},
 	methods: {
 		loadData() {
@@ -36,29 +36,29 @@ export default {
 				.then(response => {
 					if (!response 
 					|| !response.data 
-					|| response.data.status !== "OK" 
+					|| response.data.status !== 'OK' 
 					|| !response.data.data) {
-						this.dataError = "Error retrieving data"
+						this.dataError = 'Error retrieving data';
 					}
-					this.data = response.data.data
+					this.data = response.data.data;
 				})
 				.catch(error => {
 					if (error.response && error.response.data && error.response.data.error) {
-						this.dataError = error.response.data.error
-						return
+						this.dataError = error.response.data.error;
+						return;
 					}
-					this.dataError = error.message
-				})
+					this.dataError = error.message;
+				});
 		},
 		handleReload() {
-			this.dataError = ""
-			this.loadData()
+			this.dataError = '';
+			this.loadData();
 		}
 	},
 	mounted() {
-		this.loadData()
+		this.loadData();
 	}
-}
+};
 </script>
 
 <style>

@@ -11,19 +11,19 @@ import {
 	watch, 
 	inject, 
 	onBeforeMount
-} from "vue"
+} from 'vue';
 
 export default {
-	name: "Tab",
+	name: 'Tab',
 	props: {
 		title: {
 			type: String,
-			default: "TAB"
+			default: 'TAB'
 		}
 	},
 	setup(props) {
 		const isActive = ref(false);
-		const tabs = inject("TabsProvider");
+		const tabs = inject('TabsProvider');
 
 		watch(
 			() => tabs.selectedTab,
@@ -34,10 +34,10 @@ export default {
 
 		onBeforeMount(() => {
 			isActive.value = props.title === tabs.selectedIndex;
-		})
+		});
 		return { isActive };
 	}
-}
+};
 </script>
 
 <style scoped>

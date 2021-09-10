@@ -18,12 +18,12 @@
 </template>
 
 <script>
-import TransactionTable from '@/components/reusables/TransactionTable.vue'
-import Error from '@/components/reusables/Error.vue'
-import { API_URL } from '@/assets/constants'
+import TransactionTable from '@/components/reusables/TransactionTable.vue';
+import Error from '@/components/reusables/Error.vue';
+import { API_URL } from '@/assets/constants';
 
 export default {
-	name: "Incoming",
+	name: 'Incoming',
 	components: {
 		TransactionTable,
 		Error
@@ -35,25 +35,25 @@ export default {
 	},
 	data() {
 		return {
-			title: "Categorized",
+			title: 'Categorized',
 			data: {},
-			dataError: "",
-		}
+			dataError: '',
+		};
 	},
 	computed: {
 		displayCategories: function() {
-			let keys =  Object.keys(this.data)
+			let keys =  Object.keys(this.data);
 
 			//? remove and append other at the end of the array
-			let idx = keys.indexOf("other")
+			let idx = keys.indexOf('other');
 			if (idx > -1) {
-				keys.splice(idx, 1)
-				keys.push("other")
+				keys.splice(idx, 1);
+				keys.push('other');
 			}
 
 			//? remove categories that don't have any entries in them
-			keys = keys.filter(category => Object.keys(this.data[category]).length !== 0)
-			return keys
+			keys = keys.filter(category => Object.keys(this.data[category]).length !== 0);
+			return keys;
 		}
 	},
 	methods: {
@@ -63,41 +63,41 @@ export default {
 		categoryChange({currCategory, newCategory, name}) {
 
 			if (!currCategory || !newCategory || !name) {
-				console.error("Incomplete payload: Expected keys: currCategory, newCategory, name!")
-				return
+				console.error('Incomplete payload: Expected keys: currCategory, newCategory, name!');
+				return;
 			}
 
 			if(!this.data[currCategory] || !this.data[newCategory]) {
-				console.error(`current or new category doesn't exist curr: ${currCategory} new: ${newCategory}`)
-				return
+				console.error(`current or new category doesn't exist curr: ${currCategory} new: ${newCategory}`);
+				return;
 			}
 
 			if (!this.data[currCategory][name]) {
-				console.error(`${name} is not in ${currCategory}!`)
+				console.error(`${name} is not in ${currCategory}!`);
 			}
 
 			let payload = {
-				"currentCategory": currCategory,
-				"newCategory": newCategory,
-				"name": name
-			}
+				'currentCategory': currCategory,
+				'newCategory': newCategory,
+				'name': name
+			};
 			this.axios.put(`${API_URL}/categories`, payload)
 				.then(response => {
 					if (!response 
 					|| !response.data) {
-						console.error("Error in the response for change")
+						console.error('Error in the response for change');
 					}
 
-					if (response.data.status === "OK") {
-						let value = this.data[currCategory][name]
-						delete this.data[currCategory][name]
+					if (response.data.status === 'OK') {
+						let value = this.data[currCategory][name];
+						delete this.data[currCategory][name];
 
-						this.data[newCategory][name] = value
+						this.data[newCategory][name] = value;
 					}
 				})
 				.catch(error => {
-					console.error(error)
-				})
+					console.error(error);
+				});
 			
 		},
 		loadCategories() {
@@ -105,29 +105,29 @@ export default {
 				.then(response => {
 					if (!response 
 					|| !response.data 
-					|| response.data.status !== "OK" 
+					|| response.data.status !== 'OK' 
 					|| !response.data.data) {
-						this.dataError = "Error retrieving data"
+						this.dataError = 'Error retrieving data';
 					}
-					this.data = response.data.data
+					this.data = response.data.data;
 				})
 				.catch(error => {
 					if (error.response && error.response.data && error.response.data.error) {
-						this.dataError = error.response.data.error
-						return
+						this.dataError = error.response.data.error;
+						return;
 					}
-					this.dataError = error.message
-				})
+					this.dataError = error.message;
+				});
 		},
 		handleReload() {
-			this.dataError = ""
-			this.loadCategories()
+			this.dataError = '';
+			this.loadCategories();
 		}
 	},
 	mounted() {
-		this.loadCategories()
+		this.loadCategories();
 	}
-}
+};
 </script>
 
 <style scoped>

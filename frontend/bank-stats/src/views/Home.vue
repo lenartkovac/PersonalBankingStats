@@ -5,14 +5,14 @@
 </template>
 
 <script>
-import Controller from '@/components/layout/Controller.vue'
+import Controller from '@/components/layout/Controller.vue';
 
 export default {
-  name: 'Home',
-  components: {
-    Controller
-  },
-}
+	name: 'Home',
+	components: {
+		Controller
+	},
+};
 </script>
 
 <style>

@@ -6,14 +6,14 @@
 </template>
 
 <script>
-import Heading from '@/components/layout/Heading.vue'
+import Heading from '@/components/layout/Heading.vue';
 
 export default {
-  name: 'App',
-  components: {
-    Heading
-  }
-}
+	name: 'App',
+	components: {
+		Heading
+	}
+};
 </script>
 
 <style>

@@ -17,36 +17,36 @@
 
 <script>
 import {
-  onMounted,
-  provide,
-  reactive,
-  toRefs
-} from "vue"
+	onMounted,
+	provide,
+	reactive,
+	toRefs
+} from 'vue';
 
-import { useStore } from 'vuex'
-import '@/assets/style.css'
+import { useStore } from 'vuex';
+import '@/assets/style.css';
 
 export default {
 	setup(_, {slots}) {
-    const state = reactive ({
-      selectedTab: null,
-      tabs: slots.default()
-    });
+		const state = reactive ({
+			selectedTab: null,
+			tabs: slots.default()
+		});
 
-    provide("TabsProvider", state);
+		provide('TabsProvider', state);
 
-    const selectTab = (i) => {
-      state.selectedTab = i;
-      store.commit('changeTab', i)
-    }
+		const selectTab = (i) => {
+			state.selectedTab = i;
+			store.commit('changeTab', i);
+		};
 
-    const store = useStore()
+		const store = useStore();
 
-    onMounted(() => state.selectedTab = store.getters.currTab)
+		onMounted(() => state.selectedTab = store.getters.currTab);
 
-    return { ...toRefs(state), selectTab}
-  },
-}
+		return { ...toRefs(state), selectTab};
+	},
+};
 </script>
 
 <style scoped>

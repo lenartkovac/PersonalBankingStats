@@ -10,10 +10,10 @@
 </template>
 
 <script>
-import { API_URL } from '@/assets/constants'
+import { API_URL } from '@/assets/constants';
 
 export default {
-	name: "CategorySelect",
+	name: 'CategorySelect',
 	props: {
 		currCategory: {
 			type: String
@@ -24,7 +24,7 @@ export default {
 		return {
 			catNames: [],
 			selected: null
-		}
+		};
 	},
 	methods: {
 		select() {
@@ -36,20 +36,20 @@ export default {
 			.then((response) => {
 				if (!response 
 				|| !response.data 
-				|| response.data.status !== "OK" 
+				|| response.data.status !== 'OK' 
 				|| !response.data.data) {
-					this.error = "Error retrieving data"
+					this.error = 'Error retrieving data';
 				}
-				this.catNames = response.data.data
+				this.catNames = response.data.data;
 				if (this.catNames.length > 0) {
 					this.selected = this.catNames[0];
 				}
 				if (this.currCategory && this.currCategory == this.selected) {
 					this.selected = this.catNames[1];
 				}
-			})
+			});
 	}
-}
+};
 
 </script>
 

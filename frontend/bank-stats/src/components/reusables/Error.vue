@@ -17,15 +17,15 @@
 
 
 export default {
-	name: "Error",
+	name: 'Error',
 	emits: ['reload'],
 	props: {
 		message: {
 			type: String,
-			default: "An error occured"
+			default: 'An error occured'
 		}
 	}
-}
+};
 
 </script>
 

@@ -52,11 +52,11 @@
 </template>
 
 <script>
-import CategorySelect from '@/components/reusables/CategorySelect.vue'
-import '@/assets/style.css'
+import CategorySelect from '@/components/reusables/CategorySelect.vue';
+import '@/assets/style.css';
 
 export default {
-	name: "TransactionTable",
+	name: 'TransactionTable',
 	components: {
 		CategorySelect
 	},
@@ -78,10 +78,10 @@ export default {
 	data() {
 		return {
 			idx: 0,
-			sorting: "name",
+			sorting: 'name',
 			reversed: true,
-			changing: ""
-		}
+			changing: ''
+		};
 	},
 	methods: {
 		round(num) {
@@ -93,9 +93,9 @@ export default {
 		},
 		getKeys() {
 			if (this.data == null) {
-				return []
+				return [];
 			}
-			const sortFunction = this.sorting === "name" ? undefined : (a, b) => {
+			const sortFunction = this.sorting === 'name' ? undefined : (a, b) => {
 				if (this.data[a] < this.data[b]) 
 					return -1;
 				if (this.data[a] > this.data[b])
@@ -108,23 +108,23 @@ export default {
 			return this.reversed ? array.reverse() : array;
 		},
 		changeSort() {
-			this.sorting = this.sorting === "name" ? "value" : "name";
+			this.sorting = this.sorting === 'name' ? 'value' : 'name';
 		},
 		changeOrder() {
 			this.reversed = !this.reversed;
 		},
 		switchSort(origin) {
 			if (origin === this.sorting)
-				this.changeOrder()
+				this.changeOrder();
 			else 
-				this.changeSort()
+				this.changeSort();
 		},
 		changeClick(name) {
 			this.changing = name;
 		},
 		changeCategory(newCategory, currCategory, name) {
-			this.changing = "";
-			this.$emit('categoryChange', {name, currCategory, newCategory})
+			this.changing = '';
+			this.$emit('categoryChange', {name, currCategory, newCategory});
 		}
 	},
 	computed: {
@@ -140,7 +140,7 @@ export default {
 			return total;
 		}
 	}
-}
+};
 </script>
 
 <style scoped>

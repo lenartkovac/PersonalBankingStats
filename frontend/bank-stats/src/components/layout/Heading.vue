@@ -18,18 +18,18 @@
 </template>
 
 <script>
-import { useRoute } from 'vue-router'
-import { computed } from 'vue'
+import { useRoute } from 'vue-router';
+import { computed } from 'vue';
 
 export default {
-	name: "Heading",
+	name: 'Heading',
 	setup() {
-		const route = useRoute()
+		const route = useRoute();
 		
-		const path = computed(() => route.path)
-		return {path}
+		const path = computed(() => route.path);
+		return {path};
 	}
-}
+};
 </script>
 
 <style scoped>

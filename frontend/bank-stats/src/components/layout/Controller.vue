@@ -15,32 +15,32 @@
 
 
 <script>
-import MonthStats from '@/components/layout/MonthStats.vue'
-import '@/assets/style.css'
-import { mapState } from 'vuex'
+import MonthStats from '@/components/layout/MonthStats.vue';
+import '@/assets/style.css';
+import { mapState } from 'vuex';
 
 export default {
-	name: "Controller",
+	name: 'Controller',
 	components: {
 		MonthStats
 	},
 	data() {
 		return {
 			months: [
-				"January",
-				"February",
-				"March",
-				"April",
-				"May",
-				"June",
-				"July",
-				"August",
-				"September",
-				"October",
-				"November",
-				"December"
+				'January',
+				'February',
+				'March',
+				'April',
+				'May',
+				'June',
+				'July',
+				'August',
+				'September',
+				'October',
+				'November',
+				'December'
 			]
-		}
+		};
 	},
 	methods: {
 		changeDate(monthDiff, yearDiff) {
@@ -56,7 +56,7 @@ export default {
 		},
 		...mapState(['date'])
 	}
-}
+};
 
 </script>
 

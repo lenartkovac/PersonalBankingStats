@@ -40,106 +40,106 @@
 </template>
 
 <script>
-import Error from '@/components/reusables/Error.vue'
-import '@/assets/style.css'
-import { API_URL } from '@/assets/constants'
+import Error from '@/components/reusables/Error.vue';
+import '@/assets/style.css';
+import { API_URL } from '@/assets/constants';
 
 export default {
-	name: "Settings",
+	name: 'Settings',
 	components: {
 		Error
 	},
 	data() {
 		return {
 			data: null,
-			message: "",
+			message: '',
 			dataError: null,
-			deleteError: "",
-			inputError: "",
-		}
+			deleteError: '',
+			inputError: '',
+		};
 	},
 	methods: {
 		handleReload() {
-			this.dataError = ""
-			this.loadCategoryNames()
+			this.dataError = '';
+			this.loadCategoryNames();
 		},
 		addCategory(catName) {
 
 			if (catName.length < 1) {
-				this.inputError = "Category name cannot be empty"
-				return
+				this.inputError = 'Category name cannot be empty';
+				return;
 			}
 
 			if(this.data.find(el => el === catName)) {
-				this.inputError = "This category already exists"
-				return
+				this.inputError = 'This category already exists';
+				return;
 			}
 
-			let payload = {}
-			payload[catName] = ""
+			let payload = {};
+			payload[catName] = '';
 			this.axios.post(`${API_URL}/categories`, payload)
 				.then(response => {
 					if (!response
 					|| !response.data
-					|| response.data.status !== "OK"
+					|| response.data.status !== 'OK'
 					|| !response.data.data) {
-						this.dataError = "Error retreiving data"
+						this.dataError = 'Error retreiving data';
 					}
-					this.loadCategoryNames()
+					this.loadCategoryNames();
 				})
 				.catch(error => {
-					this.inputError = error.message
-				})
-			this.message = ""
+					this.inputError = error.message;
+				});
+			this.message = '';
 		},
 		removeCategory(catName) {
 			this.axios.delete(`${API_URL}/categories/${catName}/delete`)
 				.then(response => {
 					if (!response || response.status !== 204) {
 						if (response.data && response.data.error) {
-							this.deleteError = response.data.error
+							this.deleteError = response.data.error;
 						} else {
-							this.deleteError = "Error deleting category"
+							this.deleteError = 'Error deleting category';
 						}
-						return
+						return;
 					}
-					this.loadCategoryNames()
+					this.loadCategoryNames();
 				})
 				.catch(error => {
 					if (error.response && error.response.data && error.response.data.error) {
-						this.deleteError = error.response.data.error
-						return
+						this.deleteError = error.response.data.error;
+						return;
 					}
-					this.deleteError = error.message
-				})
+					this.deleteError = error.message;
+				});
 		},
 		loadCategoryNames() {
 			this.axios.get(`${API_URL}/categories/names`)
 				.then(response => {
 					if (!response 
 					|| !response.data 
-					|| response.data.status !== "OK" 
+					|| response.data.status !== 'OK' 
 					|| !response.data.data) {
-						this.dataError = "Error retrieving data"
+						this.dataError = 'Error retrieving data';
 					}
-					this.data = response.data.data.filter(el => el !== "other").sort()
+					this.data = response.data.data.filter(el => el !== 'other').sort();
 				})
 				.catch(error => {
 					if (error.response && error.response.data && error.response.data.error) {
-						this.dataError = error.response.data.error
-						return
+						this.dataError = error.response.data.error;
+						return;
 					}
-					this.dataError = error.message
-				})
+					this.dataError = error.message;
+				});
 		},
 		clearInputError() {
-			this.inputError = ""
+			this.inputError = '';
 		}
 	},
 	mounted() {
-		this.loadCategoryNames()
+		this.loadCategoryNames();
 	}
-}
+};
 
 </script>
 
