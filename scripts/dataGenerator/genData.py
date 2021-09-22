@@ -3,7 +3,9 @@ import sys
 from datetime import date
 from Utils import DataGenerator
 
-yearRange = 10
+print(sys.version)
+print(sys.version_info)
+
 
 def processCommandParams(params):
 
@@ -33,7 +35,7 @@ def processCommandParams(params):
 		if param.startswith('endMonth'):
 			endMonth = int(param.split('=')[1])
 
-	print(f'Input Params:')
+	print('Input Params:')
 	print(f'\tdataDir: {dataDir}')
 	print(f'\tstartYear: {startYear}')
 	print(f'\tendYear: {endYear}')

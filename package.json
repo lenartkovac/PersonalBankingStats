@@ -1,0 +1,27 @@
+{
+  "name": "personalbankingstats",
+  "version": "1.0.0",
+  "description": "Personal bank stats app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "app": "flask run",
+    "genData": "python scripts/dataGenerator/genData.py",
+    "pytest": "python --version",
+    "cleanData": "python scripts/dataGenerator/cleanData.py"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lenartkovac/PersonalBankingStats.git"
+  },
+  "keywords": [
+    "bank",
+    "stats"
+  ],
+  "author": "Lenart Kovac",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lenartkovac/PersonalBankingStats/issues"
+  },
+  "homepage": "https://github.com/lenartkovac/PersonalBankingStats#readme"
+}
