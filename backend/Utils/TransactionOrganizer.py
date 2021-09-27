@@ -1,3 +1,4 @@
+from pymongo.common import CONNECT_TIMEOUT
 from .DataLoader import DataLoader
 import numpy as np
 import re
@@ -12,17 +13,16 @@ from pytictoc import TicToc
 dotenv_path = os.path.join(dirname(__file__), '.env')
 load_dotenv(dotenv_path)
 
-DATABASE_URL = os.environ.get("DB_URL")
-DATABASE_PORT = int(os.environ.get("DB_PORT"))
+DATABASE_URL = os.environ.get('DB_URL')
+DATABASE_PORT = int(os.environ.get('DB_PORT'))
+DATABASE_TIMEOUT_MS = int(os.environ.get('DB_TIMEOUT_MS'))
 
 class DBhandler:
     """
     DBhandler is a singleton class that connects to the MongDB database.
     It handles the CRUD operations over the categories.
     """
-    _db = MongoClient(DATABASE_URL, DATABASE_PORT).BankDetails
-    #_categories = ["shopping", "groceries", "bills", "restaurants", "subscriptions"]
-    _categories = _db.list_collection_names()
+    _db = MongoClient(DATABASE_URL, DATABASE_PORT, serverSelectionTimeoutMS=DATABASE_TIMEOUT_MS).BankDetails
 
     @classmethod
     def getCategoryNames(cls):

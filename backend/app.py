@@ -29,6 +29,10 @@ def hello_world():
     return send_from_directory('../frontend/bank-stats/dist', 'index.html')
 
 
+@app.route("/health")
+def healthCheck():
+    return "<h2>I am online</h2>"
+
 #! Transactions API
 #* Helper functions
 def getTransactions(year: int, month: int) -> Transactions:
@@ -160,7 +164,7 @@ def transactions_outgoing_categorized(year, month):
 
 #! categories API
 #* Helper functions
-def handleDBreq(data, operation, session=None):
+def handleDBreq(data, operation):
     catNames = DBhandler.getCategoryNames()
     response = {}
     for key, val in data.items():
@@ -169,10 +173,10 @@ def handleDBreq(data, operation, session=None):
                 for item in val:
                     if item == "other":
                         continue
-                    operation(key, item, session)
+                    operation(key, item)
             else:
                 if not val == "other":
-                    operation(key, val, session)
+                    operation(key, val)
             response[key] = "OK"
         except Exception:
             response[key] = "NOK"
@@ -253,20 +257,22 @@ def change_item_category():
     }
 
     with DBhandler._db.client.start_session() as session:
-        session.start_transaction()
 
         try:
             if not data.get("currentCategory") == "other":
-                removal = handleDBreq(delPayload, DBhandler.delFromCategory, session)
-            #print(removal.json)
+                removal = handleDBreq(delPayload, DBhandler.delFromCategory)
+                # print(removal.json)
+
             if not data.get("newCategory") == "other":
-                addition = handleDBreq(addPayload, DBhandler.addToCategory, session)
-            #print(addition.json)
-            session.commit_transaction()
+                addition = handleDBreq(addPayload, DBhandler.addToCategory)
+                # print(addition.json)
+
             #print("transaction commited")
-        except:
-            session.abort_transaction()
-            #print("transaction aborted")
+        except Exception:
+            if 'removal' in locals():
+                handleDBreq(delPayload, DBhandler.addToCategory)
+            if 'addition' in locals():
+                handleDBreq(addPayload, DBhandler.delFromCategory)
 
     return jsonify(status="OK", data=data)
 
