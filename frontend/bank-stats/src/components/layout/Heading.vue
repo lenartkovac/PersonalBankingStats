@@ -1,10 +1,10 @@
 <template>
 	<div class="heading">
 			<span class="logo">
-				<img src="@/assets/logo.png"/>
+				<img clas="logo" src="@/assets/logo.svg"/>
 			</span>
 		<div class="title">
-			<span >Bank meme</span>
+			<span >Bank Stats</span>
 			<div class="router">
 				<span v-if="path === '/settings'">
 					<router-link class="routerLink" to="/"><i class="fas fa-home"/></router-link>
@@ -41,7 +41,8 @@ export default {
 
 img {
 	float: left;
-	width: 2.5em;
+	height: 30px;
+	margin-right: 1em;
 }
 
 .title {
