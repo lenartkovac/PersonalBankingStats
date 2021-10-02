@@ -1,0 +1,17 @@
+version: "3.9"
+services:
+  server:
+    build: 
+      context: .
+      dockerfile: ./docker/server
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/backend/data
+    links:
+      - "mongodb:mongodb"
+  mongodb:
+    image: "mongo:latest"
+    ports:
+      - "27017:27017"
+  

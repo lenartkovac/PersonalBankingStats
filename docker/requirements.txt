@@ -1,0 +1,7 @@
+numpy
+pymongo
+python-dotenv
+pytictoc
+flask
+flask_cors
+flasgger
