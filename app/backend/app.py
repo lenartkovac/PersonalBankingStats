@@ -2,9 +2,9 @@ from flask import Flask, jsonify, abort, request, send_from_directory
 from Utils.TransactionOrganizer import Transactions, DBhandler, TransactionManager
 from flask_cors import CORS
 from flasgger import Swagger 
+import os
 
 app = Flask(__name__)
-#TODO: Add object schemas to documentation!!!!
 Swagger(app)
 CORS(app)
 
@@ -19,14 +19,16 @@ def internal_server_error(e="Internal server error"):
 
 @app.route('/<path:path>', methods=['GET'])
 def static_proxy(path):
-    return send_from_directory('../frontend/bank-stats/dist', path)
+    print(os.environ.get('DIST_PATH'))
+    return send_from_directory(os.environ.get('DIST_PATH'), path)
 
 @app.route("/")
 def hello_world():
     """
     serve website
     """
-    return send_from_directory('../frontend/bank-stats/dist', 'index.html')
+    print(os.environ.get('DIST_PATH'))
+    return send_from_directory(os.environ.get('DIST_PATH'), 'index.html')
 
 
 @app.route("/health")

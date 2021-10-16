@@ -5,13 +5,8 @@ import re
 from pymongo import MongoClient
 from pprint import pprint
 import os
-from os.path import dirname
-from dotenv import load_dotenv
 from pytictoc import TicToc
 
-
-dotenv_path = os.path.join(dirname(__file__), '.env')
-load_dotenv(dotenv_path)
 
 DATABASE_URL = os.environ.get('DB_URL')
 DATABASE_PORT = int(os.environ.get('DB_PORT'))
