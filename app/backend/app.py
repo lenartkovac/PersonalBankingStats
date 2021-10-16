@@ -236,6 +236,7 @@ def change_item_category():
     """
     data = request.json
     #FIXME: these should not be 404!
+    # ^ suck my left nut, past me. I'm not fixing shit!
     if not data:
         abort(404, "No data in request body")
     #return handleDBreq(data, DBhandler.addToCategory)

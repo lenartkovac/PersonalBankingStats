@@ -58,7 +58,7 @@ class Transactions:
     """
     #! Static database client
 
-    def __init__(self, year, month, datadir="data"):
+    def __init__(self, year, month, datadir="../data"):
         self._year = year
         self._month = month
         self.transactions = DataLoader.monthlyData(year, month, datadir)
@@ -121,7 +121,7 @@ class TransactionManager:
         print(cls.transactions)
 
     @classmethod
-    def getTransactions(cls, year: int, month: int, datadir="data") -> Transactions:
+    def getTransactions(cls, year: int, month: int, datadir="../data") -> Transactions:
         if not cls.transactions.get(year):
             cls.transactions[year] = {}
 
