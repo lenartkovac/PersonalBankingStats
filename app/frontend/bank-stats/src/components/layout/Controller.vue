@@ -1,9 +1,13 @@
 <template>
 	<div>
 		<div class="controller noSelect">
+			<span class="month-mobile">{{months[date.getMonth()]}}</span>
 			<span class="prev" title="previous year" @click="changeDate(0, -1)"><i class="fas fa-angle-double-left"/></span>
 			<span class="prev" title="previous month" @click="changeDate(-1, 0)"><i class="fas fa-chevron-left"/></span>
-			<span>{{months[date.getMonth()]}} {{date.getFullYear()}}</span>
+			<span class="date">
+				<span class="month-desktop">{{months[date.getMonth()]}}</span>
+				<span>{{date.getFullYear()}}</span>
+			</span>
 			<span class="next" title="next month" v-if="!maxMonth" @click="changeDate(1, 0)"><i class="fas fa-chevron-right"/></span>
 			<span class="next" title="next year" v-if="!maxYear"  @click="changeDate(0, 1)"><i class="fas fa-angle-double-right"/></span>
 		</div>
@@ -68,12 +72,36 @@ export default {
 }
 
 .prev {
-	margin-right: 0.5em
+	margin-right: 0.5em;
 }
 
 .next {
-	margin-left: 0.5em
+	margin-left: 0.5em;
 }
 
+.date {
+	text-align: center;
+	display: inline-block;
+	width: 30%;
+}
+
+@media only screen and (max-device-width: 1230px) {
+	.month-mobile {
+		display: block;
+	}
+	.month-desktop {
+		display: none;
+	}
+}
+
+@media only screen and (min-device-width: 1231px) {
+	.month-mobile {
+		display: none;
+	}
+	.month-desktop {
+		display: inline-block;
+		margin-right: 0.4em;
+	}
+}
 
 </style>
