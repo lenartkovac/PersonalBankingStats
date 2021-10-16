@@ -8,8 +8,8 @@
 				<span class="month-desktop">{{months[date.getMonth()]}}</span>
 				<span>{{date.getFullYear()}}</span>
 			</span>
-			<span class="next" title="next month" v-if="!maxMonth" @click="changeDate(1, 0)"><i class="fas fa-chevron-right"/></span>
-			<span class="next" title="next year" v-if="!maxYear"  @click="changeDate(0, 1)"><i class="fas fa-angle-double-right"/></span>
+			<span class="next" title="next month" v-invisible="maxMonth" @click="changeDate(1, 0)"><i class="fas fa-chevron-right"/></span>
+			<span class="next" title="next year" v-invisible="maxYear"  @click="changeDate(0, 1)"><i class="fas fa-angle-double-right"/></span>
 		</div>
 		<div class="container">
 			<MonthStats :date="date" :key="date"/>

@@ -12,4 +12,12 @@ const app = createApp(App);
 app.use(VueAxios, axios);
 app.use(store);
 app.use(router);
+app.directive('invisible', {
+	mounted: (el, binding) => {
+		el.style.visibility = binding.value ? 'hidden' : 'visible';
+	},
+	updated: (el, binding) => {
+		el.style.visibility = binding.value ? 'hidden' : 'visible';
+	}
+});
 app.mount('#app');
