@@ -1,5 +1,6 @@
 version: "3.9"
 services:
+
   server:
     build: 
       context: .
@@ -8,8 +9,10 @@ services:
       - "8000:8000"
     volumes:
       - ./data:/backend/data
+      - ./frontend/dist:/backend/frontend/dist
     links:
       - "mongodb:mongodb"
+
   mongodb:
     image: "mongo:latest"
     ports:
