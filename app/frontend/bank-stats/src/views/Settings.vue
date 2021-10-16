@@ -28,7 +28,7 @@
 			<!-- new category input -->
 			<div class="addCategory">
 				<input class="inputField" type="input" name="addCategory" id="addCategory" @input="clearInputError" v-model="message" placeholder="test" required/>
-				<label class="inputLabel" for="addCategory">Enter new category</label>
+				<label class="inputLabel noSelect" for="addCategory">Enter new category</label>
 				<button @click="addCategory(message)">Add category</button>
 			</div>
 			
@@ -194,6 +194,7 @@ h1 {
 .inputField:focus ~ .inputLabel {
 	color: #4FC3A1;
 	bottom: 20px;
+	left: 0;
 	font-size: 12px;
 }
 
