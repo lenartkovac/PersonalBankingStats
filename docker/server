@@ -20,8 +20,8 @@ RUN pip install --upgrade pip
 COPY ./docker/requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 
-COPY ./backend .
-COPY ./frontend/dist ./dist
+COPY ./app/backend .
+COPY ./app/frontend/bank-stats/dist ./dist
 
 EXPOSE 8000
 CMD ["flask", "run"]

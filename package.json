@@ -6,9 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "app": "flask run",
-    "genData": "python scripts/dataGenerator/genData.py",
-    "pytest": "python --version",
-    "cleanData": "python scripts/dataGenerator/cleanData.py"
+    "genData": "python3 scripts/dataGenerator/genData.py",
+    "pytest": "python3 --version",
+    "cleanData": "python3 scripts/dataGenerator/cleanData.py"
   },
   "repository": {
     "type": "git",
