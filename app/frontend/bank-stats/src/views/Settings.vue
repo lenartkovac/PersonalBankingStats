@@ -77,6 +77,14 @@ export default {
 
 			let payload = {};
 			payload[catName] = '';
+
+			const loader = this.$loading.show({
+				container: null,
+				color: '#4FC3A1',
+				loader: 'dots',
+				backgroundColor: '#000'
+			});
+
 			this.axios.post(`${API_URL}/categories`, payload)
 				.then(response => {
 					if (!response
@@ -85,14 +93,26 @@ export default {
 					|| !response.data.data) {
 						this.dataError = 'Error retreiving data';
 					}
-					this.loadCategoryNames();
 				})
 				.catch(error => {
 					this.inputError = error.message;
+				})
+				.finally(() => {
+					setTimeout(() => {
+						loader.hide();
+						this.loadCategoryNames();
+					}, 250);
 				});
 			this.message = '';
 		},
 		removeCategory(catName) {
+			const loader = this.$loading.show({
+				container: null,
+				color: '#4FC3A1',
+				loader: 'dots',
+				backgroundColor: '#000'
+			});
+
 			this.axios.delete(`${API_URL}/categories/${catName}/delete`)
 				.then(response => {
 					if (!response || response.status !== 204) {
@@ -103,7 +123,6 @@ export default {
 						}
 						return;
 					}
-					this.loadCategoryNames();
 				})
 				.catch(error => {
 					if (error.response && error.response.data && error.response.data.error) {
@@ -111,9 +130,22 @@ export default {
 						return;
 					}
 					this.deleteError = error.message;
+				})
+				.finally(() => {
+					setTimeout(() => {
+						loader.hide();
+						this.loadCategoryNames();
+					}, 250);
 				});
 		},
 		loadCategoryNames() {
+			const loader = this.$loading.show({
+				container: null,
+				color: '#4FC3A1',
+				loader: 'dots',
+				backgroundColor: '#000'
+			});
+
 			this.axios.get(`${API_URL}/categories/names`)
 				.then(response => {
 					if (!response 
@@ -130,6 +162,9 @@ export default {
 						return;
 					}
 					this.dataError = error.message;
+				})
+				.finally(() => {
+					setTimeout(() => loader.hide(), 250);
 				});
 		},
 		clearInputError() {

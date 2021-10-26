@@ -81,6 +81,14 @@ export default {
 				'newCategory': newCategory,
 				'name': name
 			};
+
+			const loader = this.$loading.show({
+				container: null,
+				color: '#4FC3A1',
+				loader: 'dots',
+				backgroundColor: '#000'
+			});
+
 			this.axios.put(`${API_URL}/categories`, payload)
 				.then(response => {
 					if (!response 
@@ -97,10 +105,20 @@ export default {
 				})
 				.catch(error => {
 					console.error(error);
+				})
+				.finally(() => {
+					setTimeout(() => loader.hide(), 250);
 				});
 			
 		},
 		loadCategories() {
+			const loader = this.$loading.show({
+				container: null,
+				color: '#4FC3A1',
+				loader: 'dots',
+				backgroundColor: '#000'
+			});
+
 			this.axios.get(`${API_URL}/transactions/${this.date.getFullYear()}/${this.date.getMonth() + 1}/outgoing/categorized`)
 				.then(response => {
 					if (!response 
@@ -117,6 +135,9 @@ export default {
 						return;
 					}
 					this.dataError = error.message;
+				})
+				.finally(() => {
+					setTimeout(() => loader.hide(), 250);
 				});
 		},
 		handleReload() {

@@ -32,6 +32,13 @@ export default {
 	},
 	methods: {
 		loadData() {
+			const loader = this.$loading.show({
+				container: null,
+				color: '#4FC3A1',
+				loader: 'dots',
+				backgroundColor: '#000'
+			});
+
 			this.axios.get(`${API_URL}/transactions/${this.date.getFullYear()}/${this.date.getMonth() + 1}/incoming`)
 				.then(response => {
 					if (!response 
@@ -48,6 +55,9 @@ export default {
 						return;
 					}
 					this.dataError = error.message;
+				})
+				.finally(() => {
+					setTimeout(() => loader.hide(), 250);
 				});
 		},
 		handleReload() {
