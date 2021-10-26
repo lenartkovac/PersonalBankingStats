@@ -27,7 +27,7 @@
 
 			<!-- new category input -->
 			<div class="addCategory">
-				<input class="inputField" type="input" name="addCategory" id="addCategory" @input="clearInputError" v-model="message" placeholder="test" required/>
+				<input class="inputField" type="input" name="addCategory" id="addCategory" @input="clearInputError" @keyup.enter="addCategory(message)" v-model="message" placeholder="test" required/>
 				<label class="inputLabel noSelect" for="addCategory">Enter new category</label>
 				<button @click="addCategory(message)">Add category</button>
 			</div>
