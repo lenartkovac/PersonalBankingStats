@@ -11,7 +11,7 @@
     "clean": "docker images -f 'dangling=true' -q | xargs docker rmi",
     "resetData": "npm run cleanData && npm run genData",
     "pytest": "python3 --version",
-    "buildWebsite": "cd app/frontend/bank-stats && npm run build && cd ../../..",
+    "buildWebsite": "cd app/frontend/bank-stats && npm install && npm run build && cd ../../..",
     "buildServer": "docker compose build",
     "build": "npm run buildWebsite && npm run buildServer && npm run clean",
     "start": "docker compose up -d",
