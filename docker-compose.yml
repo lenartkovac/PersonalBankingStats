@@ -8,8 +8,7 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./data:/backend/data
-      - ./frontend/dist:/backend/frontend/dist
+      - ./data:/server/data
     links:
       - "mongodb:mongodb"
 
