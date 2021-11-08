@@ -19,7 +19,6 @@ def internal_server_error(e="Internal server error"):
 
 @app.route('/<path:path>', methods=['GET'])
 def static_proxy(path):
-    print(os.environ.get('DIST_PATH'))
     return send_from_directory(os.environ.get('DIST_PATH'), path)
 
 @app.route("/")
@@ -27,7 +26,6 @@ def hello_world():
     """
     serve website
     """
-    print(os.environ.get('DIST_PATH'))
     return send_from_directory(os.environ.get('DIST_PATH'), 'index.html')
 
 
@@ -51,10 +49,10 @@ def handleRequest(year: int, month: int, dataType: str):
         transactions = getTransactions(year, month)
     except Exception as e:
         print(e)
-        abort(500)
+        abort(500, "Internal error getting transactions for month")
 
     if not transactions: 
-        abort(500)
+        abort(500, "Internal error getting translactions for month")
     
     if dataType == "ALL":
         data = {
@@ -167,7 +165,6 @@ def transactions_outgoing_categorized(year, month):
 #! categories API
 #* Helper functions
 def handleDBreq(data, operation):
-    catNames = DBhandler.getCategoryNames()
     response = {}
     for key, val in data.items():
         try:
@@ -264,13 +261,10 @@ def change_item_category():
         try:
             if not data.get("currentCategory") == "other":
                 removal = handleDBreq(delPayload, DBhandler.delFromCategory)
-                # print(removal.json)
 
             if not data.get("newCategory") == "other":
                 addition = handleDBreq(addPayload, DBhandler.addToCategory)
-                # print(addition.json)
 
-            #print("transaction commited")
         except Exception:
             if 'removal' in locals():
                 handleDBreq(delPayload, DBhandler.addToCategory)
@@ -320,7 +314,6 @@ def remove_category(catName):
             description: Internal sevver error
     """
     result = DBhandler.dropCategory(catName)
-    print(result)
     if not result.get("ok"):
         if result.get("errmsg") == 'ns not found':
             abort(404, "Category does not exist")

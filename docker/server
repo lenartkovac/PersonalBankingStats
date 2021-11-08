@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 FROM python:3.8-alpine
 
-WORKDIR /backend
+WORKDIR /server
 
 ENV FLASK_APP=app.py
 ENV FLASK_RUN_HOST=0.0.0.0
@@ -10,6 +10,7 @@ ENV DB_PORT=27017
 ENV FLASK_RUN_PORT=8000
 ENV DB_TIMEOUT_MS=10000
 ENV DIST_PATH=./dist
+ENV DATA_DIR=./data
 
 RUN apk add --no-cache --update \
     python3 python3-dev gcc \

@@ -5,12 +5,13 @@ import re
 from pymongo import MongoClient
 from pprint import pprint
 import os
-from pytictoc import TicToc
 
 
+#? Read .env values
 DATABASE_URL = os.environ.get('DB_URL')
 DATABASE_PORT = int(os.environ.get('DB_PORT'))
 DATABASE_TIMEOUT_MS = int(os.environ.get('DB_TIMEOUT_MS'))
+DATA_DIR = os.environ.get('DATA_DIR')
 
 class DBhandler:
     """
@@ -53,7 +54,7 @@ class Transactions:
     """
     #! Static database client
 
-    def __init__(self, year, month, datadir="../data"):
+    def __init__(self, year, month, datadir):
         self._year = year
         self._month = month
         self.transactions = DataLoader.monthlyData(year, month, datadir)
@@ -70,8 +71,6 @@ class Transactions:
 
     @property
     def outgoing_cat(self) -> dict:
-        t = TicToc()
-        t.tic()
         categories = self._loadCategories()
         categorizedOut = {x: {} for x in categories}
         categorizedOut["other"] = {}
@@ -85,7 +84,6 @@ class Transactions:
                     break
             if not hasCategory:
                 categorizedOut["other"][transTitle] = transValue
-        print(t.toc("Categorization operation took: "))
         return categorizedOut
 
     @property
@@ -116,12 +114,12 @@ class TransactionManager:
         print(cls.transactions)
 
     @classmethod
-    def getTransactions(cls, year: int, month: int, datadir="../data") -> Transactions:
+    def getTransactions(cls, year: int, month: int) -> Transactions:
         if not cls.transactions.get(year):
             cls.transactions[year] = {}
 
         if not cls.transactions[year].get(month):
-            cls.transactions[year][month] = Transactions(year, month, datadir)
+            cls.transactions[year][month] = Transactions(year, month, DATA_DIR)
 
         return cls.transactions[year][month]
 
@@ -129,16 +127,13 @@ class TransactionManager:
 #! Testing
 if __name__ == "__main__":
     #! DBhandler 
-    #print(DBhandler._categories)
 
     ##! Transactions
     #monthTest = Transactions(2021, 1, datadir="/Users/lenartkovac/Projects/PersonalBankingStats/data")
     #january._loadCategories()
-    #pprint(monthTest.outgoing_cat)
-    #pprint(january.outgoing_cat)
 
     ##! TransactionManager
     TransactionManager.printTransactions()
-    print(TransactionManager.getTransactions(2021, 1, '../../data'))
-    print(TransactionManager.getTransactions(2020, 3, '../../data'))
+    print(TransactionManager.getTransactions(2021, 1))
+    print(TransactionManager.getTransactions(2020, 3))
     TransactionManager.printTransactions()
