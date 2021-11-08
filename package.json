@@ -7,8 +7,17 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "app": "flask run",
     "genData": "python3 scripts/dataGenerator/genData.py",
+    "cleanData": "python3 scripts/dataGenerator/cleanData.py",
+    "clean": "docker images -f 'dangling=true' -q | xargs docker rmi",
+    "resetData": "npm run cleanData && npm run genData",
     "pytest": "python3 --version",
-    "cleanData": "python3 scripts/dataGenerator/cleanData.py"
+    "buildWebsite": "cd app/frontend/bank-stats && npm run build && cd ../../..",
+    "buildServer": "docker compose build",
+    "build": "npm run buildWebsite && npm run buildServer && npm run clean",
+    "start": "docker compose up -d",
+    "stop": "docker compose down",
+    "restart": "npm run stop && npm run build && npm run start",
+    "init": "npm run resetData && npm run build"
   },
   "repository": {
     "type": "git",
